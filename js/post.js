@@ -63,23 +63,27 @@ let arrayImages = [];
 post.change(obtenerDatos)
 titlePost.change(obtenerDatos)
 imagenPrincipal.change(obtenerDatos)
+
+
 imagenes.change(obtenerDatos)
 tags.change(obtenerDatos)
 
 
 function obtenerDatos(e) {
-
    postObj[e.target.name] = e.target.value
-   console.log(postObj);
+   //console.log(postObj);
 }
 
 btnSubmit.click( e =>{
    e.preventDefault()
-//   postObj.fecha = new Date.now();
-   postObj.usuario = getUser()
-   console.log(postObj);
-  // createProduct(postObj)
 
+   postObj.imgUrlPostTiltle= retornodecargaimagen 
+
+   imgUrlPostContent
+  //postObj.fecha = new Date.now();
+   postObj.usuario = getUser()
+  // console.log(postObj);
+   createProduct(postObj)
 })
 
 const createProduct = (pObject) => {
