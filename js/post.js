@@ -114,4 +114,4 @@ function getUser(){
    return userPost
 }
 
-//console.log(getUser());
+console.log(getUser());
