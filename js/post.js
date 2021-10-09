@@ -177,6 +177,7 @@ function updatingPost(post) {
 //
 function preparingUpdatingPost(todoUnPost){
    const { titlePost, txtPost,id, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
+   console.log(id);
    //aca relleno los inputs con los valores del objetoque quiero editar
    console.log(titlePost, txtPost);
    $('#textareaTitle').val(titlePost)
@@ -189,6 +190,8 @@ function preparingUpdatingPost(todoUnPost){
    postObj.imgUrlPostTiltle  = imgUrlPostTiltle
    postObj.tags  = tags
    postObj.usuario = usuario
+   postObj.txtPost = txtPost
+   postObj.titlePost = titlePost
 
    //cambiar boton aca
    btnSubmit.text('Guardar Cambios');
