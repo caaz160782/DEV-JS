@@ -17,20 +17,19 @@ const getPost = () => {
     return posts
 }
 
-console.log(getPost())
+//console.log(getPost())
 
 const createNode = (typeElement, text,arrayClass) => {
     let node = document.createElement(typeElement)
     node.textContent = text
     arrayClass.forEach(className => {
         node.classList.add(className)
-    }); 
-   
+    });    
    return node
 }
-
 //pinta article por posts
 const drawPost =(objectPost) =>{
+
     let divWrapper = document.getElementById("wrapperCards")    
     while(divWrapper.lastElementChild) {
         divWrapper.removeChild(divWrapper.lastElementChild)
@@ -39,18 +38,23 @@ const drawPost =(objectPost) =>{
       console.log(key)
       console.log(objectPost[key])
       let {fechaPost,imgUrlPostContent,imgUrlPostTiltle,opiniones,tags,titlePost,txtPost,usuario,reactionsCount,countComment}= objectPost[key]
+      
       let articleCard= createNode("article",null,["card"])
       let imgPost= createNode("img",null,["card-img-top"])
           imgPost.setAttribute('src',imgUrlPostContent )
           imgPost.setAttribute('alt',"Card image cap")
+        
           articleCard.appendChild(imgPost)    
-      let divCardbody= createNode("div",null,["card-body","container","pt-2"])
+      
+          let divCardbody= createNode("div",null,["card-body","container","pt-2"])
           articleCard.appendChild(divCardbody)
       let divInfoUser= createNode("div",null,["row","justify-content-sm-start","align-items-start","no-gutters"])  
           divCardbody.appendChild(divInfoUser)
+      
       let avatarDiv= createNode("div",null,["avatar"])   
           divInfoUser.appendChild(avatarDiv)
-      let avatarImgUser= createNode("img",null,[])        
+      
+       let avatarImgUser= createNode("img",null,[])        
           avatarImgUser.setAttribute('src',usuario.pictureProfileUser) 
           avatarDiv.appendChild(avatarImgUser) 
       //card de visualizacion pequeña esta va dentro de row1
@@ -76,7 +80,7 @@ const drawPost =(objectPost) =>{
            divCardbody.appendChild(divWrappertTitlePost)
        let divTitlePost= createNode("div",null,["col-12","title"])  
            divWrappertTitlePost.appendChild(divTitlePost)
-       let ligaTitlePost= createNode("a","React Environment Variables",["nav-link"])  
+       let ligaTitlePost= createNode("a",titlePost,["nav-link"])  
            ligaTitlePost.setAttribute('href',"post.html?"+key)
            divTitlePost.appendChild(ligaTitlePost)
        let divWTagsPost= createNode("div",null,["row","pt-2","ml-md-5","no-gutters"])  
