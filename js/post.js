@@ -2,6 +2,7 @@
 //obtiene tags
 
 let postObj = {}
+postObj.tags = []
 let editando = false
 
 const getTags = () => {//para llebar el select
@@ -57,6 +58,7 @@ let tags= $('#inputTags');
 let post = $('#textarea-post');
 
 let btnSubmit = $('#btn-submit')
+let formulario = $('.form-group')
 
 let arrayImages = [];
 
@@ -75,23 +77,30 @@ function obtenerDatos(e) {
 
 btnSubmit.click( e =>{
    e.preventDefault()
-//   postObj.fecha = new Date.now();
-   postObj.usuario = getUser()
-   //console.log(postObj);
-   if(!editando){
 
-      createPost(postObj)
-   } else {
+const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } =postObj
+ if (titlePost === undefined || tags.length === 0 || txtPost === undefined || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined  ){
+   alert('campos obligatorios')
+   return
+  }
+
+if(!editando){
+
+   postObj.usuario = getUser()
+   createPost(postObj)
+} else {
+      console.log(postObj)
       alert('editando')
       updatingPost(postObj)
       editando = false
+      btnSubmit.text('Create Post');
    }
-
+   getPostAjax()
 })
 
 
 const getPostAjax = () => {
-   let postsArray
+   let postsArray = []
 
    $.ajax({
       method: "GET",
@@ -121,7 +130,7 @@ const createPost = (pObject) => {
       data: JSON.stringify(pObject),
       success: (response) => {
       //   console.log(response);
-         getPost()
+         getPostAjax()
       },
       error: error => {
          console.log(error);
@@ -156,7 +165,7 @@ function updatingPost(post) {
       data: JSON.stringify(post),
       success: (response) => {
          console.log('se hizo el update', response);
-        // getPost()
+        getPostAjax()
       },
       error: error => {
          console.log(' NO se hizo el update', error);
@@ -167,17 +176,24 @@ function updatingPost(post) {
 
 //
 function preparingUpdatingPost(todoUnPost){
-   const { titlePost, txtPost,id} = todoUnPost
+   const { titlePost, txtPost,id, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
    //aca relleno los inputs con los valores del objetoque quiero editar
    console.log(titlePost, txtPost);
    $('#textareaTitle').val(titlePost)
    $('#textarea-post').val(txtPost)
    //$('#inputGroupFile01').val(imgUrlPostContent)
 
-
+   //devolver valores al objeto
    postObj.id = id
+   postObj.imgUrlPostContent = imgUrlPostContent
+   postObj.imgUrlPostTiltle  = imgUrlPostTiltle
+   postObj.tags  = tags
+   postObj.usuario = usuario
 
-  editando = true
+   //cambiar boton aca
+   btnSubmit.text('Guardar Cambios');
+
+   editando = true
 
 }
 
@@ -212,8 +228,7 @@ function mostrarPostEnHtml(arregloKoders){
 
 
 
-    aside.textContent = ''
-   console.log(aside.textContent);
+    aside.text('')
    arregloKoders.forEach( post =>{
       const { id, titlePost} = post
 
@@ -226,7 +241,7 @@ function mostrarPostEnHtml(arregloKoders){
       btnEliminar.onclick = () => deletePost(id)
 
       let btnEditar = document.createElement('button')
-      btnEditar.textContent = 'delete'
+      btnEditar.textContent = 'edite'
       btnEditar.classList.add('btn', 'btn-warning')
       btnEditar.onclick = () => preparingUpdatingPost(post)
 
