@@ -1,6 +1,16 @@
 //https://devpost-72887-default-rtdb.firebaseio.com/tags
-let postObj = {}
+import {
+   postObj,
+   btnSubmit,
+   formulario,
+   misListener,
+   reiniciarObjeto,
+   }
+         from './variables.js'
+
 let editando = false
+let arrayTags = []
+misListener()
 //postObj.tags = []
 //esta funcion de encarga de on¿btener el valor de la variable enviada desde la pagina index
 const queryString =  ()=> {
@@ -49,7 +59,7 @@ const getTags = () => {//para llebar el select
  //console.log(getTags());
  llenaTags(getTags())
   //llena input
-let arrayTags=[]
+
 const llenaInpuTag=()=>{
    //let select_item = $("#tags").val()
     let select_text = $("#tags option:selected").text()
@@ -65,56 +75,45 @@ $("#tags").change(function() {
    console.log(arrayTags);
 })
 
-// obtener los valores de los inputs
-//SELECTORES
-let imagenPrincipal = $('#inputGroupFile01')
-let imagenes = $('#inputGroupFile02')
-let titlePost = $('#textareaTitle')
-let tags= $('#inputTags');
-let post = $('#textarea-post');
-
-let btnSubmit = $('#btn-submit')
-let formulario = $('.form-group')
-
-let arrayImages = [];
-
-post.change(obtenerDatos)
-titlePost.change(obtenerDatos)
-imagenPrincipal.change(obtenerDatos)
-imagenes.change(obtenerDatos)
-tags.change(obtenerDatos)
-
-function obtenerDatos(e) {
-   postObj[e.target.name] = e.target.value
-   //console.log(postObj);
-}
 
 btnSubmit.click( e =>{
-   e.preventDefault() 
+   e.preventDefault()
    const tiempoTranscurrido = Date.now();
    const fecha = new Date(tiempoTranscurrido);
    fecha.toUTCString()
-const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } =postObj
- if (titlePost === undefined || tags.length === 0 || txtPost === undefined || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined  ){
-   alert('campos obligatorios')
-   return
-  }
+   
+   const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
+   if (
+      titlePost === undefined || titlePost === '' || tags.length === 0
+      || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+   ) {
+      alert('campos obligatorios')
+      return
+   }
 
-if(!editando){
+   if(!editando){
    postObj.fecha = fecha
    postObj.usuario = getUser()
    postObj.reactionsCount = 0
    postObj.countComment =0
    createPost(postObj)
 } else {
-      postObj.fecha = fecha
-       //console.log(postObj)
-      alert('editando')
+   postObj.fecha = fecha
+      if (
+         titlePost === undefined || titlePost === '' || tags.length === 0
+         || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+      ) {
+         alert('campos obligatorios')
+         return
+      }
+
       updatingPost(postObj)
       editando = false
       btnSubmit.text('Create Post');
    }
    //getPostAjax()
+   reiniciarObjeto()
+   formulario[0].reset()
 })
 
 
@@ -134,7 +133,7 @@ const createPost = (pObject) => {
    })
 }
 
-//NUEVA REVISAR
+
 function updatingPost(post) {
    console.log('desde editar');
    let { id } = post
@@ -163,6 +162,11 @@ function preparingUpdatingPost(todoUnPost){
    $("#inputTags").val(tags.toString())
    //$('#inputGroupFile01').val(imgUrlPostContent)
    //devolver valores al objeto
+/*   console.log(titlePost, txtPost);
+   $('#textareaTitle').val(titlePost)
+   $('#textarea-post').val(txtPost)
+   tags.forEach((x,i) =>  $('#inputTags').val(`${x}, `))
+*/
    postObj.id = id
    postObj.imgUrlPostContent = imgUrlPostContent
    postObj.imgUrlPostTiltle  = imgUrlPostTiltle
@@ -213,7 +217,7 @@ const findPost = (idPost) => {
 if(objectIdPost.idpost !== "undefined") {
    let idPost=objectIdPost.idpost
    findPost(idPost)
-   //console.log( findPost(idPost) )
+   console.log( findPost(idPost) )
  }
 //NUEVA REVISAR
 /*function mostrarPostEnHtml(arregloKoders){
@@ -224,6 +228,7 @@ if(objectIdPost.idpost !== "undefined") {
 
    let aside = $('#aside-right')
     aside.text('')
+
    arregloKoders.forEach( post =>{
       const { id, titlePost} = post
       let pNombre = document.createElement('p')
@@ -240,7 +245,6 @@ if(objectIdPost.idpost !== "undefined") {
       aside.append(btnEditar)
       aside.append(pNombre)
    })
-
 
 }
 */
