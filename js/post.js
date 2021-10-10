@@ -75,6 +75,86 @@ $("#tags").change(function() {
    console.log(arrayTags);
 })
 
+// obtener los valores de los inputs
+
+//SELECTORES
+
+// let imagenPrincipal = $('#inputGroupFile01')
+let imagenes = $('#inputGroupFile02')
+let titlePost = $('#textareaTitle')
+let tags= $('#inputTags');
+let post = $('#textarea-post');
+
+let btnSubmit = $('#btn-submit')
+
+let arrayImages = [];
+
+post.change(obtenerDatos)
+titlePost.change(obtenerDatos)
+// imagenPrincipal.change(obtenerDatos)
+
+imagenes.change(obtenerDatos)
+tags.change(obtenerDatos)
+
+// obtiene url de la imagenes del servidor
+
+// function sleep(ms) {
+//    return new Promise(resolve => setTimeout(resolve, 10000));
+//  }
+ 
+// const image =  async (file) =>{ 
+
+// Imagen principal
+$('#inputGroupFile01').change(async (e)=> {
+   let file = e.target.files[0]
+   const formData = new FormData() //Crea un nuevo formulario en HTML
+   formData.append('file', file) //crea un imput tipo file, y recibe la informacion de la imagen
+   formData.append('upload_preset', Cloudinary_preset) // crea un nuevo input, en donde ingresa el psw de cloudinary
+   async = true
+   const res = await axios.post(CLOUDINARY, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
+    })
+   
+   // console.log(res)
+   let imgtoDb = res.data.secure_url
+   // return imgtoDb
+   postObj.imgUrlPostTiltle = imgtoDb
+   console.log(imgtoDb)
+})
+let imagePost = []
+// Imagen secundaria
+$('#inputGroupFile02').change(async (e)=> {
+   let file = e.target.files[0]
+   const formData = new FormData() //Crea un nuevo formulario en HTML
+   formData.append('file', file) //crea un imput tipo file, y recibe la informacion de la imagen
+   formData.append('upload_preset', Cloudinary_preset) // crea un nuevo input, en donde ingresa el psw de cloudinary
+   async = true
+   const res = await axios.post(CLOUDINARY, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
+    })
+   
+   // console.log(res)
+   let imgtoDb = res.data.secure_url
+   imagePost = [...imagePost, imgtoDb]
+   // return imgtoDb
+   postObj.imgUrlPostContent = imagePost
+   console.log(imagePost)
+})
+
+
+// $('#inputGroupFile01').change((e)=> {
+//    // console.log(e)
+//    let imgUrlPostTiltle = image(e.target.files[0])
+//    console.log(imgUrlPostTiltle)
+// })
+
+
+function obtenerDatos(e) {
+  
+   postObj[e.target.name] = e.target.value
+
+   console.log(postObj);
+}
 
 btnSubmit.click( e =>{
    e.preventDefault()
@@ -91,18 +171,8 @@ btnSubmit.click( e =>{
    if(!editando){
    postObj.fecha = fecha
    postObj.usuario = getUser()
-   postObj.reactionsCount = 0
-   postObj.countComment =0
-   createPost(postObj)
-} else {
-   postObj.fecha = fecha   
-      if (
-         titlePost === undefined || titlePost === '' || tags.length === 0
-         || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
-      ) {
-         alert('campos obligatorios')
-         return
-      }
+   console.log(postObj);
+  createProduct(postObj)
 
       updatingPost(postObj)
       editando = false

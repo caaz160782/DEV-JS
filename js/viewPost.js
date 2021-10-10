@@ -82,13 +82,13 @@ const drawPost =(arrayPost) =>{
       let {id,fecha,imgUrlPostContent,imgUrlPostTiltle,opiniones,tags,titlePost,txtPost,usuario,reactionsCount,countComment}= post
       
       let articleCard= createNode("article",null,["card"])
-      if(index === 0){
+      //if(index === 0){
       let imgPost= createNode("img",null,["card-img-top"])
           imgPost.setAttribute('src',imgUrlPostTiltle )
           imgPost.setAttribute('alt',"principal")
           imgPost.setAttribute('height',"274px")
           articleCard.appendChild(imgPost)    
-      }
+      //}
           let divCardbody= createNode("div",null,["card-body","container","pt-2"])
           articleCard.appendChild(divCardbody)
       let divInfoUser= createNode("div",null,["row","justify-content-sm-start","align-items-start","no-gutters"])  

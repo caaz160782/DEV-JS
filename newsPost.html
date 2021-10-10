@@ -33,10 +33,16 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
                       </div>
-                      <div class="custom-file">
+                      <div class="container">
+                        <div class="card">
+                            <!-- <img id="img-prev"> -->
+                            <input type="file" name="imgUrlPostTiltle" id="inputGroupFile01">
+                        </div>
+                    </div>
+                      <!-- <div class="custom-file">
                         <input type="file" name="imgUrlPostTiltle" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
                         <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                      </div>
+                      </div> -->
                 </div>
                <div class="form-group">
                     <textarea name="titlePost" class="form-control" id="textareaTitle" rows="3"></textarea>
@@ -79,6 +85,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
 <script src="/js/moment.js"></script>
 <script src="/js/post.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 
 </html>
