@@ -3,6 +3,15 @@
 
 let postObj = {}
 
+// Proceso para ingresar imagenes a la nube
+
+const imageUploader = document.getElementById('img-uploader')
+
+const CLOUDINARY = 'https://api.cloudinary.com/v1_1/dcakvkbpz/image/upload'
+
+const Cloudinary_preset = 'vn5lewjj'
+
+// --------------------------------------------------------------------
 
 const getTags = () => {//para llebar el select
     let tags
@@ -66,10 +75,29 @@ imagenPrincipal.change(obtenerDatos)
 imagenes.change(obtenerDatos)
 tags.change(obtenerDatos)
 
+// obtiene url de la imagen del servidor
+
+imageUploader.addEventListener ('change', async (e) => {
+  const file = e.target.files.[0]
+
+  const formData = new FormData() //Crea un nuevo formulario en HTML
+  formData.append('file', file) //crea un imput tipo file, y recibe la informacion de la imagen
+  formData.append('upload_preset', Cloudinary_preset) // crea un nuevo input, en donde ingresa el psw de cloudinary
+
+  const res = await axios.post(CLOUDINARY, formData, {
+   headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
+   })
+   // console.log(res)
+   imgtoDb = res.data.secure_url
+   console.log(imgtoDb)
+})
+
+
 
 function obtenerDatos(e) {
 
    postObj[e.target.name] = e.target.value
+
    console.log(postObj);
 }
 
