@@ -1,9 +1,28 @@
 //https://devpost-72887-default-rtdb.firebaseio.com/tags
-//obtiene tags
-
 let postObj = {}
+let editando = false
+//postObj.tags = []
+//esta funcion de encarga de on¿btener el valor de la variable enviada desde la pagina index
+const queryString =  ()=> {
+   let query_string = {};
+   let query = window.location.search.substring(1);
+   let vars = query.split("&");
+   for (let i=0;i<vars.length;i++) {
+     let pair = vars[i].split("=");
+     if (typeof query_string[pair[0]] === "undefined") {
+       query_string[pair[0]] = decodeURIComponent(pair[1]);
+     } else if (typeof query_string[pair[0]] === "string") {
+       let arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+       query_string[pair[0]] = arr;
+     } else {
+       query_string[pair[0]].push(decodeURIComponent(pair[1]));
+     }
+   }
+   return query_string;
+ }
+let objectIdPost= queryString()
 
-
+//para llebar el select
 const getTags = () => {//para llebar el select
     let tags
     $.ajax({
@@ -47,9 +66,7 @@ $("#tags").change(function() {
 })
 
 // obtener los valores de los inputs
-
 //SELECTORES
-
 let imagenPrincipal = $('#inputGroupFile01')
 let imagenes = $('#inputGroupFile02')
 let titlePost = $('#textareaTitle')
@@ -57,17 +74,15 @@ let tags= $('#inputTags');
 let post = $('#textarea-post');
 
 let btnSubmit = $('#btn-submit')
+let formulario = $('.form-group')
 
 let arrayImages = [];
 
 post.change(obtenerDatos)
 titlePost.change(obtenerDatos)
 imagenPrincipal.change(obtenerDatos)
-
-
 imagenes.change(obtenerDatos)
 tags.change(obtenerDatos)
-
 
 function obtenerDatos(e) {
    postObj[e.target.name] = e.target.value
@@ -75,41 +90,99 @@ function obtenerDatos(e) {
 }
 
 btnSubmit.click( e =>{
-   e.preventDefault()
+   e.preventDefault() 
+   const tiempoTranscurrido = Date.now();
+   const fecha = new Date(tiempoTranscurrido);
+   fecha.toUTCString()
+const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } =postObj
+ if (titlePost === undefined || tags.length === 0 || txtPost === undefined || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined  ){
+   alert('campos obligatorios')
+   return
+  }
 
-   postObj.imgUrlPostTiltle= retornodecargaimagen 
-
-   imgUrlPostContent
-  //postObj.fecha = new Date.now();
+if(!editando){
+   postObj.fecha = fecha
    postObj.usuario = getUser()
-  // console.log(postObj);
-   createProduct(postObj)
+   postObj.reactionsCount = 0
+   postObj.countComment =0
+   createPost(postObj)
+} else {
+      postObj.fecha = fecha
+       //console.log(postObj)
+      alert('editando')
+      updatingPost(postObj)
+      editando = false
+      btnSubmit.text('Create Post');
+   }
+   //getPostAjax()
 })
 
-const createProduct = (pObject) => {
+
+
+const createPost = (pObject) => {
    $.ajax({
       method: "POST",
       url: "https://devpost-72887-default-rtdb.firebaseio.com/posts.json",
       data: JSON.stringify(pObject),
       success: (response) => {
-         console.log(response);
+      //   console.log(response);
+      alert("post creado")
       },
       error: error => {
-         console.log(error);
+         console.log(error)
       }
    })
 }
 
+//NUEVA REVISAR
+function updatingPost(post) {
+   console.log('desde editar');
+   let { id } = post
+   console.log(id);
+   $.ajax({
+      method: "PUT",
+      url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${id}.json`,
+      data: JSON.stringify(post),
+      success: (response) => {
+         console.log('se hizo el update', response);        
+      },
+      error: error => {
+         console.log(' NO se hizo el update', error);
+      }
+   })
+
+}
+
+function preparingUpdatingPost(todoUnPost){
+   const { titlePost, txtPost,id, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
+   //console.log(id);
+   //aca relleno los inputs con los valores del objetoque quiero editar
+   //console.log(titlePost, txtPost);
+   $('#textareaTitle').val(titlePost)
+   $('#textarea-post').val(txtPost)
+   $("#inputTags").val(tags.toString())
+   //$('#inputGroupFile01').val(imgUrlPostContent)
+   //devolver valores al objeto
+   postObj.id = id
+   postObj.imgUrlPostContent = imgUrlPostContent
+   postObj.imgUrlPostTiltle  = imgUrlPostTiltle
+   postObj.tags  = tags
+   postObj.usuario = usuario
+   postObj.txtPost = txtPost
+   postObj.titlePost = titlePost
+   //cambiar boton aca
+   btnSubmit.text('Guardar Cambios');
+   editando = true
+}
+//preparingUpdatingPost({ titlePost: 'clau', txtPost: 'rgguez', id:"-MlXwRrmCgzevdklXuPx" })
 function getUser(){
-   let userPost = {}
-   //let nameUser
-  // let pictureProfileUser
+   let userPost = {}   
    $.ajax({
       url: 'https://randomuser.me/api/',
       dataType: 'json',
       success: function (data) {
-     //   pictureProfileUser = data.results[0].picture.thumbnail;
-       // nameUser = data.results[0].login.username
+      //pictureProfileUser = data.results[0].picture.thumbnail;
+     //nameUser = data.results[0].login.username     
         userPost.pictureProfileUser = data.results[0].picture.thumbnail;
         userPost.nameUser = data.results[0].login.username
       },
@@ -117,5 +190,59 @@ function getUser(){
    });
    return userPost
 }
+//let info.lorem(50) 
+ // se busca el post por medio del id
+const findPost = (idPost) => {
+   let post
+   $.ajax({
+       method: "GET",
+       url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${idPost}.json`,
+       success: response => {            
+           post = response
+//console.log(post)
+           preparingUpdatingPost(post)
+       },
+       error: error => {
+           console.log(error)
+       },
+       async: false
+   })
+   return post
+}
 
-//console.log(getUser());
+if(objectIdPost.idpost !== "undefined") {
+   let idPost=objectIdPost.idpost
+   findPost(idPost)
+   //console.log( findPost(idPost) )
+ }
+//NUEVA REVISAR
+/*function mostrarPostEnHtml(arregloKoders){
+   console.log('*************');
+   console.log('FUNCION DE PINTAR');
+   console.log(arregloKoders);
+   console.log('*************');
+
+   let aside = $('#aside-right')
+    aside.text('')
+   arregloKoders.forEach( post =>{
+      const { id, titlePost} = post
+      let pNombre = document.createElement('p')
+      pNombre.textContent = id
+      let btnEliminar = document.createElement('button')
+      btnEliminar.textContent = 'delete'
+      btnEliminar.classList.add('btn', 'btn-danger')
+      btnEliminar.onclick = () => deletePost(id)
+      let btnEditar = document.createElement('button')
+      btnEditar.textContent = 'edite'
+      btnEditar.classList.add('btn', 'btn-warning')
+      btnEditar.onclick = () => preparingUpdatingPost(post)
+      aside.append(btnEliminar)
+      aside.append(btnEditar)
+      aside.append(pNombre)
+   })
+
+
+}
+*/
+
+
