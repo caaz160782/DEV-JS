@@ -1,9 +1,23 @@
 //https://devpost-72887-default-rtdb.firebaseio.com/tags
 //obtiene tags
 
-let postObj = {}
-postObj.tags = []
+import {
+      postObj,
+      btnSubmit,
+      formulario,
+      misListener,
+      reiniciarObjeto,
+      }
+            from './variables.js'
+
+
+
 let editando = false
+postObj.tags = []
+let arrayTags = []
+misListener()
+getPostAjax()
+
 
 const getTags = () => {//para llebar el select
     let tags
@@ -31,7 +45,7 @@ const getTags = () => {//para llebar el select
  //console.log(getTags());
  llenaTags(getTags())
   //llena input
-let arrayTags=[]
+
 const llenaInpuTag=()=>{
    //let select_item = $("#tags").val()
     let select_text = $("#tags option:selected").text()
@@ -47,33 +61,6 @@ $("#tags").change(function() {
    console.log(arrayTags);
 })
 
-// obtener los valores de los inputs
-
-//SELECTORES
-
-let imagenPrincipal = $('#inputGroupFile01')
-let imagenes = $('#inputGroupFile02')
-let titlePost = $('#textareaTitle')
-let tags= $('#inputTags');
-let post = $('#textarea-post');
-
-let btnSubmit = $('#btn-submit')
-let formulario = $('#form')
-
-let arrayImages = [];
-
-post.change(obtenerDatos)
-titlePost.change(obtenerDatos)
-imagenPrincipal.change(obtenerDatos)
-imagenes.change(obtenerDatos)
-tags.change(obtenerDatos)
-
-
-function obtenerDatos(e) {
-
-   postObj[e.target.name] = e.target.value
-
-}
 
 btnSubmit.click( e =>{
    e.preventDefault()
@@ -86,7 +73,6 @@ btnSubmit.click( e =>{
       alert('campos obligatorios')
       return
    }
-
 
    if(!editando){
 
@@ -107,22 +93,13 @@ btnSubmit.click( e =>{
    }
    getPostAjax()
 
+   reiniciarObjeto()
    formulario[0].reset()
 })
 
 
-function validarCampos(){
-   const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
-   if (
-      titlePost === undefined || titlePost === '' || tags.length === 0
-      || txtPost === undefined || txtPost === ''|| imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
-      ) {
-      alert('campos obligatorios')
-      return
-   }
-}
 
-const getPostAjax = () => {
+function getPostAjax() {
    let postsArray = []
 
    $.ajax({
@@ -143,9 +120,6 @@ const getPostAjax = () => {
 
 }
 
-
-getPostAjax()
-
 const createPost = (pObject) => {
    $.ajax({
       method: "POST",
@@ -160,7 +134,7 @@ const createPost = (pObject) => {
       }
    })
 }
-//NUEVA REVISAR
+
 function deletePost(id) {
    console.log(id);
    $.ajax({
@@ -177,7 +151,7 @@ function deletePost(id) {
    })
 }
 
-//NUEVA REVISAR
+
 function updatingPost(post) {
    console.log('desde editar');
    let { id } = post
@@ -200,18 +174,13 @@ function updatingPost(post) {
 //
 function preparingUpdatingPost(todoUnPost){
    const { titlePost, txtPost,id, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
-   console.log(id);
-   //aca relleno los inputs con los valores del objetoque quiero editar
+
    console.log(titlePost, txtPost);
    $('#textareaTitle').val(titlePost)
    $('#textarea-post').val(txtPost)
    tags.forEach((x,i) =>  $('#inputTags').val(`${x}, `))
 
-  // $('#inputTags').val()
 
-   //$('#inputGroupFile01').val(imgUrlPostContent)
-
-   //devolver valores al objeto
    postObj.id = id
    postObj.imgUrlPostContent = imgUrlPostContent
    postObj.imgUrlPostTiltle  = imgUrlPostTiltle
@@ -220,7 +189,6 @@ function preparingUpdatingPost(todoUnPost){
    postObj.txtPost = txtPost
    postObj.titlePost = titlePost
 
-   //cambiar boton aca
    btnSubmit.text('Guardar Cambios');
 
    editando = true
@@ -229,8 +197,6 @@ function preparingUpdatingPost(todoUnPost){
 
 function getUser(){
    let userPost = {}
-   //let nameUser
-  // let pictureProfileUser
    $.ajax({
       url: 'https://randomuser.me/api/',
       dataType: 'json',
@@ -244,18 +210,12 @@ function getUser(){
    });
    return userPost
 }
-//NUEVA REVISAR
+
 function mostrarPostEnHtml(arregloKoders){
-   console.log('*************');
-   console.log('FUNCION DE PINTAR');
-   console.log(arregloKoders);
-   console.log('*************');
 
    let aside = $('#aside-right')
-
-
-
     aside.text('')
+
    arregloKoders.forEach( post =>{
       const { id, titlePost} = post
 
@@ -279,15 +239,6 @@ function mostrarPostEnHtml(arregloKoders){
 
    })
 
-
 }
 
 
-
-
-//console.log(getUser());
-/**
-  const date = new Date()
-  const record = date.getFullYear() +'-'+ date.getMonth() +'-'+ date.getDate()
-  console.log(record)
- */
