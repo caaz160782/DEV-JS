@@ -78,9 +78,7 @@ $("#tags").change(function() {
 
 btnSubmit.click( e =>{
    e.preventDefault()
-   const tiempoTranscurrido = Date.now();
-   const fecha = new Date(tiempoTranscurrido);
-   fecha.toUTCString()
+   let fecha =moment().format('DD/MM/YYYY HH:mm:ss');
    
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
    if (
@@ -90,7 +88,6 @@ btnSubmit.click( e =>{
       alert('campos obligatorios')
       return
    }
-
    if(!editando){
    postObj.fecha = fecha
    postObj.usuario = getUser()
@@ -98,7 +95,7 @@ btnSubmit.click( e =>{
    postObj.countComment =0
    createPost(postObj)
 } else {
-   postObj.fecha = fecha
+   postObj.fecha = fecha   
       if (
          titlePost === undefined || titlePost === '' || tags.length === 0
          || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
@@ -115,8 +112,6 @@ btnSubmit.click( e =>{
    reiniciarObjeto()
    formulario[0].reset()
 })
-
-
 
 const createPost = (pObject) => {
    $.ajax({
@@ -136,8 +131,7 @@ const createPost = (pObject) => {
 
 function updatingPost(post) {
    console.log('desde editar');
-   let { id } = post
-   console.log(id);
+   let { id } = post   
    $.ajax({
       method: "PUT",
       url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${id}.json`,
@@ -217,7 +211,7 @@ const findPost = (idPost) => {
 if(objectIdPost.idpost !== "undefined") {
    let idPost=objectIdPost.idpost
    findPost(idPost)
-   console.log( findPost(idPost) )
+   //console.log( findPost(idPost) )
  }
 //NUEVA REVISAR
 /*function mostrarPostEnHtml(arregloKoders){
@@ -225,10 +219,8 @@ if(objectIdPost.idpost !== "undefined") {
    console.log('FUNCION DE PINTAR');
    console.log(arregloKoders);
    console.log('*************');
-
    let aside = $('#aside-right')
     aside.text('')
-
    arregloKoders.forEach( post =>{
       const { id, titlePost} = post
       let pNombre = document.createElement('p')
@@ -245,7 +237,6 @@ if(objectIdPost.idpost !== "undefined") {
       aside.append(btnEditar)
       aside.append(pNombre)
    })
-
 }
 */
 
