@@ -1,24 +1,57 @@
 //optener los post
+let postArray=[]
 const getPost = () => {
-    let posts
+    postArray=[]
+    let postsObject
     $.ajax({
         method: "GET",
         url: "https://devpost-72887-default-rtdb.firebaseio.com/posts.json",
-        success: response => { 
-            
-            posts = response
-           // llenaTags(tags)
+        success: response => {             
+            postsObject = response 
+        //   console.log(postsObject)     
+                for (const key in postsObject) {
+                    console.log(key)
+                    console.log(postsObject[key])
+                     //postsObject = postsObject[key]
+                     //postsObject.id = key
+                     postArray = [...postArray, {...postsObject[key]}]
+                  }
+//               console.log(postArray)     
         },
         error: error => {
             console.log(error)
         },
         async: false
     })    
-    return posts
+    //return posts
+    return postArray
 }
-
+//funcion eliminar en bd con llamada ajax creada por Clau
+const deletePost=(idPost) => {
+    console.log(idPost);
+    $.ajax({
+       method: "DELETE",
+       url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${idPost}.json`,
+ 
+       success: (response) => {
+         // console.log(response);
+         drawPost(getPost())
+       },
+       error: error => {
+          console.log(error);
+       }
+    })
+ }
+//obtiene id y se llama  ala funcion ndelete
+const clickToDeletePost=(e)=>{
+    let idPost = e.target.dataset.postIdDelete    
+    deletePost(idPost)
+}
+const clickToEditPost=(e)=>{
+    let idPost = e.target.dataset.postIdEdit
+    window.location.href = `newsPost.html?idpost=${idPost}` 
+}
 //console.log(getPost())
-
 const createNode = (typeElement, text,arrayClass) => {
     let node = document.createElement(typeElement)
     node.textContent = text
@@ -28,21 +61,23 @@ const createNode = (typeElement, text,arrayClass) => {
    return node
 }
 //pinta article por posts
-const drawPost =(objectPost) =>{
-
+//const drawPost =(objectPost) =>{
+const drawPost =(arrayPost) =>{
     let divWrapper = document.getElementById("wrapperCards")    
     while(divWrapper.lastElementChild) {
         divWrapper.removeChild(divWrapper.lastElementChild)
     }  
-    for (const key in objectPost) {
-      console.log(key)
-      console.log(objectPost[key])
-      let {fechaPost,imgUrlPostContent,imgUrlPostTiltle,opiniones,tags,titlePost,txtPost,usuario,reactionsCount,countComment}= objectPost[key]
+  // for (const key in objectPost) {
+      //console.log(key)
+      //console.log(objectPost[key])
+     arrayPost.forEach((post, index) => {
+    // let {fecha,imgUrlPostContent,imgUrlPostTiltle,opiniones,tags,titlePost,txtPost,usuario,reactionsCount,countComment}= objectPost[key]
+      let {id,fecha,imgUrlPostContent,imgUrlPostTiltle,opiniones,tags,titlePost,txtPost,usuario,reactionsCount,countComment}= post
       
       let articleCard= createNode("article",null,["card"])
       let imgPost= createNode("img",null,["card-img-top"])
           imgPost.setAttribute('src',imgUrlPostContent )
-          imgPost.setAttribute('alt',"Card image cap")
+          imgPost.setAttribute('alt',"avatar")
         
           articleCard.appendChild(imgPost)    
       
@@ -58,30 +93,53 @@ const drawPost =(objectPost) =>{
           avatarImgUser.setAttribute('src',usuario.pictureProfileUser) 
           avatarDiv.appendChild(avatarImgUser) 
       //card de visualizacion pequeña esta va dentro de row1
-      /** <div class=" datos pl-2 pl-md-2">
-                            <div class="nombre">Suprabha
-                                <div class="card user flex-md-column justify-content-md-center " style="width: 14rem;">
-                                    <div class="header pt-md-2 d-md-flex flex-md-row align-items-center">
-                                        <div class="avatar"><img src="images/1avatar.png"></div>
-                                        <div class="name-avatar pt-md-2">Suprabha </div>
-                                    </div>
 
-                                    <div class="follow"><button class="btn-follow"> Follow </button> </div>
-                                    <div class="card-body">
-                                        <p>Lorem iprehenderit aliquid, iustoiis eveniet. Exercitationem fugiat,
-                                            nesciunt, veritatis optio quo, cupiditate eaque vitae quisquam nam
-                                            repellendus atque numquam.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="date mt-md-2">Aug 20 (1 hour ago)</div>
-       </div>*/    
+      let avatarDatosDiv= createNode("div",null,["datos","pl-2","pl-md-2"])   
+          divInfoUser.appendChild(avatarDatosDiv)
+      
+      let avatarNombreDiv= createNode("div",usuario.nameUser,["nombre"])   
+          avatarDatosDiv.appendChild(avatarNombreDiv)   
+
+      let avatarCardUserDiv= createNode("div","",["card","user","flex-md-column","justify-content-md-center"])   
+          avatarNombreDiv.appendChild(avatarCardUserDiv)   
+
+      let avatarCardheaderDiv= createNode("div","",["header","pt-md-2","d-md-flex","flex-md-row","align-items-center"])   
+           avatarCardUserDiv.appendChild(avatarCardheaderDiv)  
+       
+     let avatarCardImgDiv= createNode("div","",["avatar"])   
+         avatarCardheaderDiv.appendChild(avatarCardImgDiv)      
+      
+     let avatarImgUserCard= createNode("img",null,[])        
+         avatarImgUserCard.setAttribute('src',usuario.pictureProfileUser) 
+         avatarCardImgDiv.appendChild(avatarImgUserCard)  
+         
+     let avatarNombreDivCard= createNode("div",usuario.nameUser,["name-avatar","pt-md-2"])   
+         avatarCardheaderDiv.appendChild(avatarNombreDivCard)      
+         
+
+      let avatarCardBtnDiv= createNode("div","",["follow"])   
+         avatarCardUserDiv.appendChild(avatarCardBtnDiv)   
+         
+      let buttonFollow = createNode("button","Follow",["btn-follow"]) 
+          avatarCardBtnDiv.appendChild(buttonFollow)      
+
+      let avatarCardBodyDiv= createNode("div","",["card-body"])   
+          avatarCardUserDiv.appendChild(avatarCardBodyDiv)     
+
+      let avatarCardp= createNode("p",`Lorem iprehenderit aliquid, iustoiis eveniet. Exercitationem fugiat,nesciunt, veritatis optio quo, 
+                                       cupiditate eaque vitae quisquam nam repellendus atque numquam.`,[])   
+          avatarCardBodyDiv.appendChild(avatarCardp)                   
+
+      let avatarDatePostDiv= createNode("div",fecha,["date","mt-md-2"])   
+          avatarDatosDiv.appendChild(avatarDatePostDiv)       
+
+     
        let divWrappertTitlePost= createNode("div",null,["row","pt-2","ml-md-5","no-gutters"])  
            divCardbody.appendChild(divWrappertTitlePost)
        let divTitlePost= createNode("div",null,["col-12","title"])  
            divWrappertTitlePost.appendChild(divTitlePost)
        let ligaTitlePost= createNode("a",titlePost,["nav-link"])  
-           ligaTitlePost.setAttribute('href',"post.html?"+key)
+           ligaTitlePost.setAttribute('href',"post.html?idpost="+id)           
            divTitlePost.appendChild(ligaTitlePost)
        let divWTagsPost= createNode("div",null,["row","pt-2","ml-md-5","no-gutters"])  
            divCardbody.appendChild(divWTagsPost)
@@ -107,7 +165,6 @@ const drawPost =(objectPost) =>{
          divWheart.appendChild(divCountReactions)
        let divTxtReactions=createNode("div","reactions",["d-none","d-md-block","pl-md-1"])  
          divWheart.appendChild(divTxtReactions)  
-
 
        let divWComment=createNode("div",null,["comments","d-flex","flex-row"])  
          divWInteractions.appendChild(divWComment)         
@@ -138,11 +195,28 @@ const drawPost =(objectPost) =>{
       divWInfo.appendChild(divWbtnSave) 
 
       let divbtnSave=createNode("button","Save",["btn-save"])  
-      divWbtnSave.appendChild(divbtnSave) 
-        
+      divWbtnSave.appendChild(divbtnSave)     
+
+      let iEdit=createNode("i","",["bi","bi-pencil-square"])
+      let buttonEdit = createNode("button","",["btn","btn-info","mr-1"])
+      iEdit.setAttribute("data-post-id-edit", id)
+      buttonEdit.appendChild(iEdit)      
+      buttonEdit.setAttribute("data-post-id-edit", id)
+      buttonEdit.addEventListener("click", clickToEditPost)
+      divWbtnSave.appendChild(buttonEdit)      
+    
+      let iDelete=createNode("i","",["bi","bi-trash"])
+      let buttonDelete = createNode("button","",["btn","btn-danger"])
+      iDelete.setAttribute("data-post-id-delete", id)
+      buttonDelete.appendChild(iDelete)      
+      buttonDelete.setAttribute("data-post-id-delete", id)
+      buttonDelete.addEventListener("click", clickToDeletePost)
+      divWbtnSave.appendChild(buttonDelete)      
 
       divWrapper.appendChild(articleCard)
-    }
+   // }
+        })
 
 }
+
 drawPost(getPost())
