@@ -58,7 +58,7 @@ let tags= $('#inputTags');
 let post = $('#textarea-post');
 
 let btnSubmit = $('#btn-submit')
-let formulario = $('.form-group')
+let formulario = $('#form')
 
 let arrayImages = [];
 
@@ -78,26 +78,49 @@ function obtenerDatos(e) {
 btnSubmit.click( e =>{
    e.preventDefault()
 
-const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } =postObj
- if (titlePost === undefined || tags.length === 0 || txtPost === undefined || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined  ){
-   alert('campos obligatorios')
-   return
-  }
+   const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
+   if (
+      titlePost === undefined || titlePost === '' || tags.length === 0
+      || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+   ) {
+      alert('campos obligatorios')
+      return
+   }
 
-if(!editando){
+
+   if(!editando){
 
    postObj.usuario = getUser()
    createPost(postObj)
 } else {
-      console.log(postObj)
-      alert('editando')
+      if (
+         titlePost === undefined || titlePost === '' || tags.length === 0
+         || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+      ) {
+         alert('campos obligatorios')
+         return
+      }
+
       updatingPost(postObj)
       editando = false
       btnSubmit.text('Create Post');
    }
    getPostAjax()
+
+   formulario[0].reset()
 })
 
+
+function validarCampos(){
+   const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
+   if (
+      titlePost === undefined || titlePost === '' || tags.length === 0
+      || txtPost === undefined || txtPost === ''|| imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+      ) {
+      alert('campos obligatorios')
+      return
+   }
+}
 
 const getPostAjax = () => {
    let postsArray = []
@@ -182,6 +205,10 @@ function preparingUpdatingPost(todoUnPost){
    console.log(titlePost, txtPost);
    $('#textareaTitle').val(titlePost)
    $('#textarea-post').val(txtPost)
+   tags.forEach((x,i) =>  $('#inputTags').val(`${x}, `))
+
+  // $('#inputTags').val()
+
    //$('#inputGroupFile01').val(imgUrlPostContent)
 
    //devolver valores al objeto
@@ -199,9 +226,6 @@ function preparingUpdatingPost(todoUnPost){
    editando = true
 
 }
-
-//preparingUpdatingPost({ titlePost: 'clau', txtPost: 'rgguez', id:"-MlXwRrmCgzevdklXuPx" })
-
 
 function getUser(){
    let userPost = {}
