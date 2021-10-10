@@ -11,6 +11,8 @@ import {
 let editando = false
 let arrayTags = []
 misListener()
+const CLOUDINARY = 'https://api.cloudinary.com/v1_1/dcakvkbpz/image/upload'
+const Cloudinary_preset = 'vn5lewjj'
 //postObj.tags = []
 //esta funcion de encarga de on¿btener el valor de la variable enviada desde la pagina index
 const queryString =  ()=> {
@@ -76,28 +78,22 @@ $("#tags").change(function() {
 })
 
 // obtener los valores de los inputs
-
 //SELECTORES
-
 // let imagenPrincipal = $('#inputGroupFile01')
 let imagenes = $('#inputGroupFile02')
 let titlePost = $('#textareaTitle')
 let tags= $('#inputTags');
 let post = $('#textarea-post');
 
-let btnSubmit = $('#btn-submit')
-
+//let btnSubmit = $('#btn-submit')
 let arrayImages = [];
-
 post.change(obtenerDatos)
 titlePost.change(obtenerDatos)
 // imagenPrincipal.change(obtenerDatos)
-
-imagenes.change(obtenerDatos)
+//imagenes.change(obtenerDatos)
 tags.change(obtenerDatos)
 
 // obtiene url de la imagenes del servidor
-
 // function sleep(ms) {
 //    return new Promise(resolve => setTimeout(resolve, 10000));
 //  }
@@ -110,11 +106,10 @@ $('#inputGroupFile01').change(async (e)=> {
    const formData = new FormData() //Crea un nuevo formulario en HTML
    formData.append('file', file) //crea un imput tipo file, y recibe la informacion de la imagen
    formData.append('upload_preset', Cloudinary_preset) // crea un nuevo input, en donde ingresa el psw de cloudinary
-   async = true
+   //async = true
    const res = await axios.post(CLOUDINARY, formData, {
     headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
-    })
-   
+    })   
    // console.log(res)
    let imgtoDb = res.data.secure_url
    // return imgtoDb
@@ -128,7 +123,7 @@ $('#inputGroupFile02').change(async (e)=> {
    const formData = new FormData() //Crea un nuevo formulario en HTML
    formData.append('file', file) //crea un imput tipo file, y recibe la informacion de la imagen
    formData.append('upload_preset', Cloudinary_preset) // crea un nuevo input, en donde ingresa el psw de cloudinary
-   async = true
+   //async = true
    const res = await axios.post(CLOUDINARY, formData, {
     headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
     })
@@ -140,26 +135,20 @@ $('#inputGroupFile02').change(async (e)=> {
    postObj.imgUrlPostContent = imagePost
    console.log(imagePost)
 })
-
-
 // $('#inputGroupFile01').change((e)=> {
 //    // console.log(e)
 //    let imgUrlPostTiltle = image(e.target.files[0])
 //    console.log(imgUrlPostTiltle)
 // })
 
-
 function obtenerDatos(e) {
-  
-   postObj[e.target.name] = e.target.value
-
-   console.log(postObj);
+     postObj[e.target.name] = e.target.value
+   //console.log(postObj);
 }
 
 btnSubmit.click( e =>{
    e.preventDefault()
-   let fecha =moment().format('DD/MM/YYYY HH:mm:ss');
-   
+   let fecha =moment().format('DD/MM/YYYY HH:mm:ss');   
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
    if (
       titlePost === undefined || titlePost === '' || tags.length === 0
@@ -171,8 +160,18 @@ btnSubmit.click( e =>{
    if(!editando){
    postObj.fecha = fecha
    postObj.usuario = getUser()
-   console.log(postObj);
-  createProduct(postObj)
+   postObj.reactionsCount = 0
+   postObj.countComment =0
+   createPost(postObj)
+} else {
+   postObj.fecha = fecha   
+      if (
+         titlePost === undefined || titlePost === '' || tags.length === 0
+         || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+      ) {
+         alert('campos obligatorios')
+         return
+      }
 
       updatingPost(postObj)
       editando = false
