@@ -5,7 +5,7 @@ let postObj = {}
 
 // Proceso para ingresar imagenes a la nube
 
-const imageUploader = document.getElementById('img-uploader')
+// const imageUploader = document.getElementById('inputGroupFile01')
 
 const CLOUDINARY = 'https://api.cloudinary.com/v1_1/dcakvkbpz/image/upload'
 
@@ -59,7 +59,7 @@ $("#tags").change(function() {
 
 //SELECTORES
 
-let imagenPrincipal = $('#inputGroupFile01')
+// let imagenPrincipal = $('#inputGroupFile01')
 let imagenes = $('#inputGroupFile02')
 let titlePost = $('#textareaTitle')
 let tags= $('#inputTags');
@@ -71,31 +71,66 @@ let arrayImages = [];
 
 post.change(obtenerDatos)
 titlePost.change(obtenerDatos)
-imagenPrincipal.change(obtenerDatos)
+// imagenPrincipal.change(obtenerDatos)
+
 imagenes.change(obtenerDatos)
 tags.change(obtenerDatos)
 
-// obtiene url de la imagen del servidor
+// obtiene url de la imagenes del servidor
 
-imageUploader.addEventListener ('change', async (e) => {
-  const file = e.target.files.[0]
+// function sleep(ms) {
+//    return new Promise(resolve => setTimeout(resolve, 10000));
+//  }
+ 
+// const image =  async (file) =>{ 
 
-  const formData = new FormData() //Crea un nuevo formulario en HTML
-  formData.append('file', file) //crea un imput tipo file, y recibe la informacion de la imagen
-  formData.append('upload_preset', Cloudinary_preset) // crea un nuevo input, en donde ingresa el psw de cloudinary
-
-  const res = await axios.post(CLOUDINARY, formData, {
-   headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
-   })
+// Imagen principal
+$('#inputGroupFile01').change(async (e)=> {
+   let file = e.target.files[0]
+   const formData = new FormData() //Crea un nuevo formulario en HTML
+   formData.append('file', file) //crea un imput tipo file, y recibe la informacion de la imagen
+   formData.append('upload_preset', Cloudinary_preset) // crea un nuevo input, en donde ingresa el psw de cloudinary
+   async = true
+   const res = await axios.post(CLOUDINARY, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
+    })
+   
    // console.log(res)
-   imgtoDb = res.data.secure_url
+   let imgtoDb = res.data.secure_url
+   // return imgtoDb
+   postObj.imgUrlPostTiltle = imgtoDb
    console.log(imgtoDb)
+})
+let imagePost = []
+// Imagen secundaria
+$('#inputGroupFile02').change(async (e)=> {
+   let file = e.target.files[0]
+   const formData = new FormData() //Crea un nuevo formulario en HTML
+   formData.append('file', file) //crea un imput tipo file, y recibe la informacion de la imagen
+   formData.append('upload_preset', Cloudinary_preset) // crea un nuevo input, en donde ingresa el psw de cloudinary
+   async = true
+   const res = await axios.post(CLOUDINARY, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
+    })
+   
+   // console.log(res)
+   let imgtoDb = res.data.secure_url
+   imagePost = [...imagePost, imgtoDb]
+   // return imgtoDb
+   postObj.imgUrlPostContent = imagePost
+   console.log(imagePost)
 })
 
 
+// $('#inputGroupFile01').change((e)=> {
+//    // console.log(e)
+//    let imgUrlPostTiltle = image(e.target.files[0])
+//    console.log(imgUrlPostTiltle)
+// })
+
 
 function obtenerDatos(e) {
-
+  
    postObj[e.target.name] = e.target.value
 
    console.log(postObj);
@@ -106,7 +141,7 @@ btnSubmit.click( e =>{
 //   postObj.fecha = new Date.now();
    postObj.usuario = getUser()
    console.log(postObj);
-  // createProduct(postObj)
+  createProduct(postObj)
 
 })
 
