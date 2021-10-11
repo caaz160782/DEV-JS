@@ -148,6 +148,7 @@ function obtenerDatos(e) {
 
 btnSubmit.click( e =>{
    e.preventDefault()
+   //let fecha =moment().format('DD/MM/YYYY HH:mm:ss');   
    let fecha =moment().format('DD/MM/YYYY HH:mm:ss');   
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
    if (
@@ -162,7 +163,8 @@ btnSubmit.click( e =>{
    postObj.usuario = getUser()
    postObj.reactionsCount = 0
    postObj.countComment =0
-   createPost(postObj)
+   console.log(postObj)
+   //createPost(postObj)
 } else {
    postObj.fecha = fecha   
       if (
@@ -188,8 +190,8 @@ const createPost = (pObject) => {
       url: "https://devpost-72887-default-rtdb.firebaseio.com/posts.json",
       data: JSON.stringify(pObject),
       success: (response) => {
-      //   console.log(response);
-      alert("post creado")
+         console.log(response);
+         alert("post creado")
       },
       error: error => {
          console.log(error)
