@@ -10,6 +10,9 @@ import {
 
 let editando = false
 let arrayTags = []
+
+//let simplemde = new SimpleMDE({ element: $("#textarea-post")[0] });
+
 misListener()
 const CLOUDINARY = 'https://api.cloudinary.com/v1_1/dcakvkbpz/image/upload'
 const Cloudinary_preset = 'vn5lewjj'
@@ -76,15 +79,13 @@ $("#tags").change(function() {
    llenaInpuTag()
    console.log(arrayTags);
 })
-
 // obtener los valores de los inputs
 //SELECTORES
 // let imagenPrincipal = $('#inputGroupFile01')
-let imagenes = $('#inputGroupFile02')
+//let imagenes = $('#inputGroupFile02')
 let titlePost = $('#textareaTitle')
 let tags= $('#inputTags');
 let post = $('#textarea-post');
-
 //let btnSubmit = $('#btn-submit')
 let arrayImages = [];
 post.change(obtenerDatos)
@@ -92,13 +93,12 @@ titlePost.change(obtenerDatos)
 // imagenPrincipal.change(obtenerDatos)
 //imagenes.change(obtenerDatos)
 tags.change(obtenerDatos)
-
 // obtiene url de la imagenes del servidor
 // function sleep(ms) {
 //    return new Promise(resolve => setTimeout(resolve, 10000));
 //  }
- 
-// const image =  async (file) =>{ 
+
+// const image =  async (file) =>{
 
 // Imagen principal
 $('#inputGroupFile01').change(async (e)=> {
@@ -109,7 +109,7 @@ $('#inputGroupFile01').change(async (e)=> {
    //async = true
    const res = await axios.post(CLOUDINARY, formData, {
     headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
-    })   
+    })
    // console.log(res)
    let imgtoDb = res.data.secure_url
    // return imgtoDb
@@ -127,7 +127,7 @@ $('#inputGroupFile02').change(async (e)=> {
    const res = await axios.post(CLOUDINARY, formData, {
     headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
     })
-   
+
    // console.log(res)
    let imgtoDb = res.data.secure_url
    imagePost = [...imagePost, imgtoDb]
@@ -148,36 +148,41 @@ function obtenerDatos(e) {
 
 btnSubmit.click( e =>{
    e.preventDefault()
-   let fecha =moment().format('DD/MM/YYYY HH:mm:ss');   
+   let fecha =moment().format('DD/MM/YYYY' )   
+   //let txtPost = simplemde.value()
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
    if (
       titlePost === undefined || titlePost === '' || tags.length === 0
-      || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+      || txtPost === undefined || txtPost === '' 
+      || imgUrlPostTiltle === undefined || imgUrlPostContent === undefined
    ) {
-      alert('campos obligatorios')
-      return
+     // alert('campos obligatorios')
+      mostrarMensaje()
+      return txtPost
    }
    if(!editando){
+   postObj.txtPost = txtPost
    postObj.fecha = fecha
    postObj.usuario = getUser()
    postObj.reactionsCount = 0
    postObj.countComment =0
+   //console.log(postObj)
    createPost(postObj)
 } else {
-   postObj.fecha = fecha   
+   postObj.fecha = fecha
       if (
          titlePost === undefined || titlePost === '' || tags.length === 0
-         || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+         || txtPost === undefined || txtPost === '' 
+         || imgUrlPostTiltle === undefined  ||  imgUrlPostContent=== undefined
       ) {
-         alert('campos obligatorios')
+         mostrarMensaje()
+      //   alert('campos obligatorios')
          return
       }
-
       updatingPost(postObj)
       editando = false
       btnSubmit.text('Create Post');
    }
-   //getPostAjax()
    reiniciarObjeto()
    formulario[0].reset()
 })
@@ -188,8 +193,8 @@ const createPost = (pObject) => {
       url: "https://devpost-72887-default-rtdb.firebaseio.com/posts.json",
       data: JSON.stringify(pObject),
       success: (response) => {
-      //   console.log(response);
-      alert("post creado")
+         console.log(response);
+         alert("post creado")
       },
       error: error => {
          console.log(error)
@@ -197,16 +202,15 @@ const createPost = (pObject) => {
    })
 }
 
-
 function updatingPost(post) {
    console.log('desde editar');
-   let { id } = post   
+   let { id } = post
    $.ajax({
       method: "PUT",
       url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${id}.json`,
       data: JSON.stringify(post),
       success: (response) => {
-         console.log('se hizo el update', response);        
+         console.log('se hizo el update', response);
       },
       error: error => {
          console.log(' NO se hizo el update', error);
@@ -215,21 +219,22 @@ function updatingPost(post) {
 
 }
 
-function preparingUpdatingPost(todoUnPost){
-   const { titlePost, txtPost,id, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
+function preparingUpdatingPost(id,todoUnPost){
+   //console.log(todoUnPost)
+
+   const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
    //console.log(id);
    //aca relleno los inputs con los valores del objetoque quiero editar
-   //console.log(titlePost, txtPost);
    $('#textareaTitle').val(titlePost)
    $('#textarea-post').val(txtPost)
-   $("#inputTags").val(tags.toString())
+   // $("#inputTags").val(tags.toString())
    //$('#inputGroupFile01').val(imgUrlPostContent)
    //devolver valores al objeto
 /*   console.log(titlePost, txtPost);
-   $('#textareaTitle').val(titlePost)
-   $('#textarea-post').val(txtPost)
+   $('#textareaTitle').val(titlePost)*/
+//   $('#textarea-post').val(txtPost)
    tags.forEach((x,i) =>  $('#inputTags').val(`${x}, `))
-*/
+
    postObj.id = id
    postObj.imgUrlPostContent = imgUrlPostContent
    postObj.imgUrlPostTiltle  = imgUrlPostTiltle
@@ -243,13 +248,13 @@ function preparingUpdatingPost(todoUnPost){
 }
 //preparingUpdatingPost({ titlePost: 'clau', txtPost: 'rgguez', id:"-MlXwRrmCgzevdklXuPx" })
 function getUser(){
-   let userPost = {}   
+   let userPost = {}
    $.ajax({
       url: 'https://randomuser.me/api/',
       dataType: 'json',
       success: function (data) {
       //pictureProfileUser = data.results[0].picture.thumbnail;
-     //nameUser = data.results[0].login.username     
+     //nameUser = data.results[0].login.username
         userPost.pictureProfileUser = data.results[0].picture.thumbnail;
         userPost.nameUser = data.results[0].login.username
       },
@@ -257,17 +262,17 @@ function getUser(){
    });
    return userPost
 }
-//let info.lorem(50) 
+//let info.lorem(50)
  // se busca el post por medio del id
 const findPost = (idPost) => {
    let post
    $.ajax({
        method: "GET",
        url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${idPost}.json`,
-       success: response => {            
+       success: response => {
            post = response
-//console.log(post)
-           preparingUpdatingPost(post)
+           console.log(post)
+           preparingUpdatingPost(idPost,post)     
        },
        error: error => {
            console.log(error)
@@ -279,9 +284,33 @@ const findPost = (idPost) => {
 
 if(objectIdPost.idpost !== "undefined") {
    let idPost=objectIdPost.idpost
+  // console.log( idPost )
    findPost(idPost)
    //console.log( findPost(idPost) )
  }
+
+function mostrarMensaje() {
+   let existe = document.querySelector(".mensaje")
+   if(!existe){
+
+      const mensajito = document.createElement('p');
+      mensajito.textContent = 'Todos los campos son de llenado obligatorio :)'
+      mensajito.setAttribute("style", "font-weight: bold;")
+
+
+       mensajito.classList.add("mensaje","text-danger", "py-1", "mx-5", "mt-2")
+
+      document.querySelector('.alerta').setAttribute("style","background-color:#FFE6E6;")
+      document.querySelector('.jumbotron').setAttribute("style","padding: 2rem 2rem;")
+      document.querySelector('.alerta').appendChild(mensajito)
+
+         setTimeout(() => {
+            mensajito.remove()
+            document.querySelector('.jumbotron').removeAttribute("style");
+         }, 2000);
+   }
+}
+
 //NUEVA REVISAR
 /*function mostrarPostEnHtml(arregloKoders){
    console.log('*************');
