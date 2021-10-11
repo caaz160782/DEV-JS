@@ -28,8 +28,7 @@ const deletePost=(idPost) => {
     $.ajax({
        method: "DELETE",
        url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${idPost}.json`,
-
-       success: (response) => {
+     success: (response) => {
          // console.log(response);
          drawPost(getPost())
        },
@@ -78,18 +77,22 @@ const drawPost =(arrayPost) =>{
       //console.log(key)
       //console.log(objectPost[key])
      arrayPost.forEach((post, index) => {
+
     // let {fecha,imgUrlPostContent,imgUrlPostTiltle,opiniones,tags,titlePost,txtPost,usuario,reactionsCount,countComment}= objectPost[key]
       let {id,fecha,imgUrlPostContent,imgUrlPostTiltle,opiniones,tags,titlePost,txtPost,usuario,reactionsCount,countComment}= post
-
       let articleCard= createNode("article",null,["card"])
-      //if(index === 0){
+      if(index === 0){
       let imgPost= createNode("img",null,["card-img-top"])
           imgPost.setAttribute('src',imgUrlPostTiltle )
           imgPost.setAttribute('alt',"principal")
           imgPost.setAttribute('height',"274px")
           articleCard.appendChild(imgPost)
-      //}
-          let divCardbody= createNode("div",null,["card-body","container","pt-2"])
+      }
+ //         let divCardbody= createNode("div",null,["card-body","container","pt-2"])
+///          articleCard.appendChild(imgPost)    
+//      }
+      let divCardbody= createNode("div",null,["card-body","container","pt-2"])
+
           articleCard.appendChild(divCardbody)
       let divInfoUser= createNode("div",null,["row","justify-content-sm-start","align-items-start","no-gutters"])
           divCardbody.appendChild(divInfoUser)
@@ -143,8 +146,10 @@ const drawPost =(arrayPost) =>{
            divCardbody.appendChild(divWrappertTitlePost)
        let divTitlePost= createNode("div",null,["col-12","title"])
            divWrappertTitlePost.appendChild(divTitlePost)
-       let ligaTitlePost= createNode("a",titlePost,["nav-link"])
-           ligaTitlePost.setAttribute('href',"post.html?idpost="+id)
+
+       let ligaTitlePost= createNode("a",titlePost,["nav-link"])  
+           ligaTitlePost.setAttribute('href',"detailPost.html?idpost="+id)           
+
            divTitlePost.appendChild(ligaTitlePost)
        let divWTagsPost= createNode("div",null,["row","pt-2","ml-md-5","no-gutters"])
            divCardbody.appendChild(divWTagsPost)
@@ -162,7 +167,18 @@ const drawPost =(arrayPost) =>{
          divWheart.appendChild(divSvg)
        let iHeart=createNode("i",null,["bi","bi-suit-heart"])
        divSvg.appendChild(iHeart)
+
 /*     //no funciono svg se cambiaron por icon
+
+
+    /*   iDelete.setAttribute("data-post-id-delete", id)
+      buttonDelete.appendChild(iDelete)      
+      buttonDelete.setAttribute("data-post-id-delete", id)
+      buttonDelete.addEventListener("click", clickToDeletePost)
+      divWbtnSave.appendChild(buttonDelete)      */
+
+/*     //no funciono svg se cambiaron por icon  
+
        //<i class="bi bi-suit-heart"></i>
        let svg=createNode("svg",null,[])
          svg.setAttribute('width',"24")
@@ -235,7 +251,19 @@ drawPost(getPost())
 $("#heart-Count").click( ()=> {
     //$( "#target" ).click();
     alert("count")
-  });
+  })
+
+
+ $("#week").click(()=> {
+    
+    console.log(1)
+    
+ })
+ $("#fechas").change(()=> {
+    let select = $("#fechas option:selected").val()
+    console.log(select)
+    
+ })
 
 document.querySelector('#month').addEventListener('click', (e) => {
     e.preventDefault()
@@ -246,6 +274,7 @@ document.querySelector('#month').addEventListener('click', (e) => {
 
    console.log( postArray);
 })
+
 document.querySelector('#year').addEventListener('click', (e) => {
     e.preventDefault()
 

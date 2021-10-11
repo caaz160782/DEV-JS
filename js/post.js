@@ -10,6 +10,9 @@ import {
 
 let editando = false
 let arrayTags = []
+
+//let simplemde = new SimpleMDE({ element: $("#textarea-post")[0] });
+
 misListener()
 const CLOUDINARY = 'https://api.cloudinary.com/v1_1/dcakvkbpz/image/upload'
 const Cloudinary_preset = 'vn5lewjj'
@@ -76,15 +79,13 @@ $("#tags").change(function() {
    llenaInpuTag()
    console.log(arrayTags);
 })
-
 // obtener los valores de los inputs
 //SELECTORES
 // let imagenPrincipal = $('#inputGroupFile01')
-let imagenes = $('#inputGroupFile02')
+//let imagenes = $('#inputGroupFile02')
 let titlePost = $('#textareaTitle')
 let tags= $('#inputTags');
 let post = $('#textarea-post');
-
 //let btnSubmit = $('#btn-submit')
 let arrayImages = [];
 post.change(obtenerDatos)
@@ -92,7 +93,6 @@ titlePost.change(obtenerDatos)
 // imagenPrincipal.change(obtenerDatos)
 //imagenes.change(obtenerDatos)
 tags.change(obtenerDatos)
-
 // obtiene url de la imagenes del servidor
 // function sleep(ms) {
 //    return new Promise(resolve => setTimeout(resolve, 10000));
@@ -148,38 +148,41 @@ function obtenerDatos(e) {
 
 btnSubmit.click( e =>{
    e.preventDefault()
-   let fecha =moment().format('DD/MM/YYYY HH:mm:ss');
+   let fecha =moment().format('DD/MM/YYYY' )   
+   //let txtPost = simplemde.value()
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
    if (
       titlePost === undefined || titlePost === '' || tags.length === 0
-      || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+      || txtPost === undefined || txtPost === '' 
+      || imgUrlPostTiltle === undefined || imgUrlPostContent === undefined
    ) {
      // alert('campos obligatorios')
       mostrarMensaje()
-      return
+      return txtPost
    }
    if(!editando){
+   postObj.txtPost = txtPost
    postObj.fecha = fecha
    postObj.usuario = getUser()
    postObj.reactionsCount = 0
    postObj.countComment =0
+   //console.log(postObj)
    createPost(postObj)
 } else {
    postObj.fecha = fecha
       if (
          titlePost === undefined || titlePost === '' || tags.length === 0
-         || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+         || txtPost === undefined || txtPost === '' 
+         || imgUrlPostTiltle === undefined  ||  imgUrlPostContent=== undefined
       ) {
          mostrarMensaje()
       //   alert('campos obligatorios')
          return
       }
-
       updatingPost(postObj)
       editando = false
       btnSubmit.text('Create Post');
    }
-   //getPostAjax()
    reiniciarObjeto()
    formulario[0].reset()
 })
@@ -190,15 +193,14 @@ const createPost = (pObject) => {
       url: "https://devpost-72887-default-rtdb.firebaseio.com/posts.json",
       data: JSON.stringify(pObject),
       success: (response) => {
-      //   console.log(response);
-      alert("post creado")
+         console.log(response);
+         alert("post creado")
       },
       error: error => {
          console.log(error)
       }
    })
 }
-
 
 function updatingPost(post) {
    console.log('desde editar');
@@ -217,21 +219,22 @@ function updatingPost(post) {
 
 }
 
-function preparingUpdatingPost(todoUnPost){
-   const { titlePost, txtPost,id, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
+function preparingUpdatingPost(id,todoUnPost){
+   //console.log(todoUnPost)
+
+   const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
    //console.log(id);
    //aca relleno los inputs con los valores del objetoque quiero editar
-   //console.log(titlePost, txtPost);
    $('#textareaTitle').val(titlePost)
    $('#textarea-post').val(txtPost)
-   $("#inputTags").val(tags.toString())
+   // $("#inputTags").val(tags.toString())
    //$('#inputGroupFile01').val(imgUrlPostContent)
    //devolver valores al objeto
 /*   console.log(titlePost, txtPost);
-   $('#textareaTitle').val(titlePost)
-   $('#textarea-post').val(txtPost)
+   $('#textareaTitle').val(titlePost)*/
+//   $('#textarea-post').val(txtPost)
    tags.forEach((x,i) =>  $('#inputTags').val(`${x}, `))
-*/
+
    postObj.id = id
    postObj.imgUrlPostContent = imgUrlPostContent
    postObj.imgUrlPostTiltle  = imgUrlPostTiltle
@@ -268,8 +271,8 @@ const findPost = (idPost) => {
        url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${idPost}.json`,
        success: response => {
            post = response
-//console.log(post)
-           preparingUpdatingPost(post)
+           console.log(post)
+           preparingUpdatingPost(idPost,post)     
        },
        error: error => {
            console.log(error)
@@ -281,6 +284,7 @@ const findPost = (idPost) => {
 
 if(objectIdPost.idpost !== "undefined") {
    let idPost=objectIdPost.idpost
+  // console.log( idPost )
    findPost(idPost)
    //console.log( findPost(idPost) )
  }
