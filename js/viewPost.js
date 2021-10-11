@@ -271,17 +271,17 @@ document.querySelector('#month').addEventListener('click', (e) => {
         return { ...post, fechaConvertida: post.fecha.split('/')}
     })
    postArray = postArray.filter( post => Number(post.fechaConvertida[1]) === new Date().getMonth() + 1 )
-
    console.log( postArray);
+   drawPost(postArray)
 })
 
 document.querySelector('#year').addEventListener('click', (e) => {
     e.preventDefault()
-
     postArray = postArray.map( post =>{
        return { ...post, fechaConvertida: post.fecha.split('/')}
     })
     postArray = postArray.filter(post => Number(post.fechaConvertida[2]) === new Date().getFullYear())
     console.log(postArray);
+    drawPost(postArray)
 
 })

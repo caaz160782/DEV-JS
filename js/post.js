@@ -307,9 +307,6 @@ function mostrarMensaje() {
          }, 2000);
    }
 }
-
-
-
 //NUEVA REVISAR
 /*function mostrarPostEnHtml(arregloKoders){
    console.log('*************');
