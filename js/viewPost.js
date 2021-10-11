@@ -276,20 +276,22 @@ $("#weekgetter").click(()=> {
     
     let numsemana = weekCalc()
     console.log("Estamos en la semana"+ numsemana)
-    // console.log(getPost())
+    let objPost = getPost()
+    let fechaPost = objPost.fecha
+    console.log(objPost.id)
 
-    let fechapost = database.ref('fecha')
-    ref.on('value', getFecha, err)
+    // let fechapost = database.ref('fecha')
+    // ref.on('value', getFecha, err)
 
-    const getFecha = (data) => {
-        console.log(data)
+    // const getFecha = (data) => {
+    //     console.log(data)
 
-    }
+    // }
     
-    const errFecha = (err) => {
-        console.log('Error')
-        console.log(err)
-    }
+    // const errFecha = (err) => {
+    //     console.log('Error')
+    //     console.log(err)
+    // }
  })
 //  $("#fechas").change(()=> {
 //     let select = $("#fechas option:selected").val()
