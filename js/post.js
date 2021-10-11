@@ -292,13 +292,10 @@ if(objectIdPost.idpost !== "undefined") {
 function mostrarMensaje() {
    let existe = document.querySelector(".mensaje")
    if(!existe){
-
       const mensajito = document.createElement('p');
       mensajito.textContent = 'Todos los campos son de llenado obligatorio :)'
       mensajito.setAttribute("style", "font-weight: bold;")
-
-
-       mensajito.classList.add("mensaje","text-danger", "py-1", "mx-5", "mt-2")
+      mensajito.classList.add("mensaje","text-danger", "py-1", "mx-5", "mt-2")
 
       document.querySelector('.alerta').setAttribute("style","background-color:#FFE6E6;")
       document.querySelector('.jumbotron').setAttribute("style","padding: 2rem 2rem;")
@@ -310,6 +307,8 @@ function mostrarMensaje() {
          }, 2000);
    }
 }
+
+
 
 //NUEVA REVISAR
 /*function mostrarPostEnHtml(arregloKoders){
