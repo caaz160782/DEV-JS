@@ -161,11 +161,11 @@ const drawPost =(arrayPost) =>{
        let iHeart=createNode("i",null,["bi","bi-suit-heart"])   
        divSvg.appendChild(iHeart)
 
-       iDelete.setAttribute("data-post-id-delete", id)
+    /*   iDelete.setAttribute("data-post-id-delete", id)
       buttonDelete.appendChild(iDelete)      
       buttonDelete.setAttribute("data-post-id-delete", id)
       buttonDelete.addEventListener("click", clickToDeletePost)
-      divWbtnSave.appendChild(buttonDelete)      
+      divWbtnSave.appendChild(buttonDelete)      */
 
 /*     //no funciono svg se cambiaron por icon  
        //<i class="bi bi-suit-heart"></i>

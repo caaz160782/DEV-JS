@@ -148,8 +148,13 @@ function obtenerDatos(e) {
 
 btnSubmit.click( e =>{
    e.preventDefault()
+<<<<<<< HEAD
+   //let fecha =moment().format('DD/MM/YYYY HH:mm:ss');   
+   let fecha =moment().format('DD/MM/YYYY' );   
+=======
 
    let fecha =moment().format('DD/MM/YYYY ');
+>>>>>>> develop
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
    if (
       titlePost === undefined || titlePost === '' || tags.length === 0
@@ -165,7 +170,7 @@ btnSubmit.click( e =>{
    postObj.reactionsCount = 0
    postObj.countComment =0
    console.log(postObj)
-   //createPost(postObj)
+   createPost(postObj)
 } else {
    postObj.fecha = fecha
       if (
@@ -176,7 +181,6 @@ btnSubmit.click( e =>{
       //   alert('campos obligatorios')
          return
       }
-
       updatingPost(postObj)
       editando = false
       btnSubmit.text('Create Post');
