@@ -10,6 +10,9 @@ import {
 
 let editando = false
 let arrayTags = []
+
+//let simplemde = new SimpleMDE({ element: $("#textarea-post")[0] });
+
 misListener()
 const CLOUDINARY = 'https://api.cloudinary.com/v1_1/dcakvkbpz/image/upload'
 const Cloudinary_preset = 'vn5lewjj'
@@ -90,7 +93,6 @@ titlePost.change(obtenerDatos)
 // imagenPrincipal.change(obtenerDatos)
 //imagenes.change(obtenerDatos)
 tags.change(obtenerDatos)
-
 // obtiene url de la imagenes del servidor
 // function sleep(ms) {
 //    return new Promise(resolve => setTimeout(resolve, 10000));
@@ -146,29 +148,32 @@ function obtenerDatos(e) {
 
 btnSubmit.click( e =>{
    e.preventDefault()
-   //let fecha =moment().format('DD/MM/YYYY HH:mm:ss');   
-   let fecha =moment().format('DD/MM/YYYY' );   
+   let fecha =moment().format('DD/MM/YYYY' )   
+   //let txtPost = simplemde.value()
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
    if (
       titlePost === undefined || titlePost === '' || tags.length === 0
-      || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+      || txtPost === undefined || txtPost === '' 
+      || imgUrlPostTiltle === undefined || imgUrlPostContent === undefined
    ) {
      // alert('campos obligatorios')
       mostrarMensaje()
-      return
+      return txtPost
    }
    if(!editando){
+   postObj.txtPost = txtPost
    postObj.fecha = fecha
    postObj.usuario = getUser()
    postObj.reactionsCount = 0
    postObj.countComment =0
-   console.log(postObj)
+   //console.log(postObj)
    createPost(postObj)
 } else {
    postObj.fecha = fecha
       if (
          titlePost === undefined || titlePost === '' || tags.length === 0
-         || txtPost === undefined || txtPost === '' || imgUrlPostContent === undefined || imgUrlPostTiltle === undefined
+         || txtPost === undefined || txtPost === '' 
+         || imgUrlPostTiltle === undefined  ||  imgUrlPostContent=== undefined
       ) {
          mostrarMensaje()
       //   alert('campos obligatorios')
@@ -178,7 +183,6 @@ btnSubmit.click( e =>{
       editando = false
       btnSubmit.text('Create Post');
    }
-   //getPostAjax()
    reiniciarObjeto()
    formulario[0].reset()
 })
@@ -216,20 +220,21 @@ function updatingPost(post) {
 }
 
 function preparingUpdatingPost(id,todoUnPost){
-   console.log(todoUnPost)
+   //console.log(todoUnPost)
+
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
    //console.log(id);
    //aca relleno los inputs con los valores del objetoque quiero editar
    $('#textareaTitle').val(titlePost)
    $('#textarea-post').val(txtPost)
-   $("#inputTags").val(tags.toString())
+   // $("#inputTags").val(tags.toString())
    //$('#inputGroupFile01').val(imgUrlPostContent)
    //devolver valores al objeto
 /*   console.log(titlePost, txtPost);
-   $('#textareaTitle').val(titlePost)
-   $('#textarea-post').val(txtPost)
+   $('#textareaTitle').val(titlePost)*/
+//   $('#textarea-post').val(txtPost)
    tags.forEach((x,i) =>  $('#inputTags').val(`${x}, `))
-*/
+
    postObj.id = id
    postObj.imgUrlPostContent = imgUrlPostContent
    postObj.imgUrlPostTiltle  = imgUrlPostTiltle
