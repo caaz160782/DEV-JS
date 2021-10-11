@@ -99,7 +99,7 @@ tags.change(obtenerDatos)
 //  }
 
 // const image =  async (file) =>{
-/*
+
 // Imagen principal
 $('#inputGroupFile01').change(async (e)=> {
    let file = e.target.files[0]
@@ -140,7 +140,7 @@ $('#inputGroupFile02').change(async (e)=> {
 //    let imgUrlPostTiltle = image(e.target.files[0])
 //    console.log(imgUrlPostTiltle)
 // })
-*/
+
 function obtenerDatos(e) {
      postObj[e.target.name] = e.target.value
    //console.log(postObj);

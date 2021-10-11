@@ -77,7 +77,7 @@ const drawPost =(arrayPost) =>{
       //console.log(key)
       //console.log(objectPost[key])
      arrayPost.forEach((post, index) => {
-    // let {fecha,imgUrlPostContent,imgUrlPostTiltle,opiniones,tags,titlePost,txtPost,usuario,reactionsCount,countComment}= objectPost[key]
+    //let {fecha,imgUrlPostContent,imgUrlPostTiltle,opiniones,tags,titlePost,txtPost,usuario,reactionsCount,countComment}= objectPost[key]
       let {id,fecha,imgUrlPostContent,imgUrlPostTiltle,opiniones,tags,titlePost,txtPost,usuario,reactionsCount,countComment}= post      
       let articleCard= createNode("article",null,["card"])
       if(index === 0){
@@ -142,7 +142,7 @@ const drawPost =(arrayPost) =>{
        let divTitlePost= createNode("div",null,["col-12","title"])  
            divWrappertTitlePost.appendChild(divTitlePost)
        let ligaTitlePost= createNode("a",titlePost,["nav-link"])  
-           ligaTitlePost.setAttribute('href',"post.html?idpost="+id)           
+           ligaTitlePost.setAttribute('href',"detailPost.html?idpost="+id)           
            divTitlePost.appendChild(ligaTitlePost)
        let divWTagsPost= createNode("div",null,["row","pt-2","ml-md-5","no-gutters"])  
            divCardbody.appendChild(divWTagsPost)
