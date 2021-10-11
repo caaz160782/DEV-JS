@@ -277,8 +277,8 @@ $("#weekgetter").click(()=> {
     let numsemana = weekCalc()
     console.log("Estamos en la semana"+ numsemana)
     let objPost = getPost()
-    let fechaPost = objPost.fecha
-    console.log(objPost.id)
+    // let fechaPost = objPost.fecha
+    // console.log(objPost.id)
 
     // let fechapost = database.ref('fecha')
     // ref.on('value', getFecha, err)
