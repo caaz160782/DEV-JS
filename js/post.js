@@ -76,15 +76,13 @@ $("#tags").change(function() {
    llenaInpuTag()
    console.log(arrayTags);
 })
-
 // obtener los valores de los inputs
 //SELECTORES
 // let imagenPrincipal = $('#inputGroupFile01')
-let imagenes = $('#inputGroupFile02')
+//let imagenes = $('#inputGroupFile02')
 let titlePost = $('#textareaTitle')
 let tags= $('#inputTags');
 let post = $('#textarea-post');
-
 //let btnSubmit = $('#btn-submit')
 let arrayImages = [];
 post.change(obtenerDatos)
@@ -148,13 +146,8 @@ function obtenerDatos(e) {
 
 btnSubmit.click( e =>{
    e.preventDefault()
-<<<<<<< HEAD
    //let fecha =moment().format('DD/MM/YYYY HH:mm:ss');   
    let fecha =moment().format('DD/MM/YYYY' );   
-=======
-
-   let fecha =moment().format('DD/MM/YYYY ');
->>>>>>> develop
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
    if (
       titlePost === undefined || titlePost === '' || tags.length === 0
@@ -205,7 +198,6 @@ const createPost = (pObject) => {
    })
 }
 
-
 function updatingPost(post) {
    console.log('desde editar');
    let { id } = post
@@ -224,11 +216,10 @@ function updatingPost(post) {
 }
 
 function preparingUpdatingPost(id,todoUnPost){
-   //console.log(todoUnPost)
+   console.log(todoUnPost)
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
    //console.log(id);
    //aca relleno los inputs con los valores del objetoque quiero editar
-   //console.log(titlePost, txtPost);
    $('#textareaTitle').val(titlePost)
    $('#textarea-post').val(txtPost)
    $("#inputTags").val(tags.toString())
@@ -275,10 +266,8 @@ const findPost = (idPost) => {
        url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${idPost}.json`,
        success: response => {
            post = response
-//console.log(post)
-           preparingUpdatingPost(post)
-
-     
+           console.log(post)
+           preparingUpdatingPost(idPost,post)     
        },
        error: error => {
            console.log(error)
@@ -290,6 +279,7 @@ const findPost = (idPost) => {
 
 if(objectIdPost.idpost !== "undefined") {
    let idPost=objectIdPost.idpost
+  // console.log( idPost )
    findPost(idPost)
    //console.log( findPost(idPost) )
  }
