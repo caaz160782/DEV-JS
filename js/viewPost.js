@@ -237,3 +237,54 @@ $("#heart-Count").click( ()=> {
     alert("count")
   });
 
+// funcion de calculo de semana acual
+
+const weekCalc = () => {
+    let hoy = new Date() //Genera la fecha del dia de hoy
+    let primEne = new Date(hoy.getFullYear(), 0,1) //Genera la fecha del primer dia del año
+    
+    let countSema = Math.floor((hoy - primEne)/(24*60*60*1000)) //calcula cuantos dias han pasado desde el inicio de año, hasta la fecha actual
+    
+    let result = Math.ceil((hoy.getDay()+1+countSema)/7) //entrega el numero de semana actual
+    return result
+}
+
+
+// const Selectfilter = () =>{
+//     let selector = document.getElementById('timeFilter')
+//     case  
+// }
+
+$("#weekgetter").click(()=> {
+    
+    let numsemana = weekCalc()
+    console.log("Estamos en la semana"+ numsemana)
+    // console.log(getPost())
+
+    let fechapost = database.ref('fecha')
+    ref.on('value', getFecha, err)
+
+    const getFecha = (data) => {
+        console.log(data)
+
+    }
+    
+    const errFecha = (err) => {
+        console.log('Error')
+        console.log(err)
+    }
+ })
+//  $("#fechas").change(()=> {
+//     let select = $("#fechas option:selected").val()
+//     console.log(select)
+    
+//  })
+
+
+
+
+
+
+
+
+
