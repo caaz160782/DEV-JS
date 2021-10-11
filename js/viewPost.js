@@ -235,5 +235,17 @@ drawPost(getPost())
 $("#heart-Count").click( ()=> {
     //$( "#target" ).click();
     alert("count")
-  });
+  })
+
+
+ $("#week").click(()=> {
+    
+    console.log(1)
+    
+ })
+ $("#fechas").change(()=> {
+    let select = $("#fechas option:selected").val()
+    console.log(select)
+    
+ })
 

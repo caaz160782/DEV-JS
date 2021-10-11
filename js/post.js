@@ -201,6 +201,8 @@ const createPost = (pObject) => {
 function updatingPost(post) {
    console.log('desde editar');
    let { id } = post   
+   //console.log(id)
+   
    $.ajax({
       method: "PUT",
       url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${id}.json`,
@@ -215,8 +217,9 @@ function updatingPost(post) {
 
 }
 
-function preparingUpdatingPost(todoUnPost){
-   const { titlePost, txtPost,id, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
+function preparingUpdatingPost(id,todoUnPost){
+   //console.log(todoUnPost)
+   const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
    //console.log(id);
    //aca relleno los inputs con los valores del objetoque quiero editar
    //console.log(titlePost, txtPost);
@@ -265,9 +268,9 @@ const findPost = (idPost) => {
        method: "GET",
        url: `https://devpost-72887-default-rtdb.firebaseio.com/posts/${idPost}.json`,
        success: response => {            
-           post = response
-//console.log(post)
-           preparingUpdatingPost(post)
+           post = response          
+        //console.log(post)
+           preparingUpdatingPost(idPost,post)
        },
        error: error => {
            console.log(error)
