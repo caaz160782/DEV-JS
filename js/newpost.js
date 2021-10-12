@@ -102,6 +102,7 @@ tags.change(obtenerDatos)
 
 // Imagen principal
 $('#inputGroupFile01').change(async (e)=> {
+   let imgPrev = document.getElementById('img-prev')
    let file = e.target.files[0]
    const formData = new FormData() //Crea un nuevo formulario en HTML
    formData.append('file', file) //crea un imput tipo file, y recibe la informacion de la imagen
@@ -114,7 +115,8 @@ $('#inputGroupFile01').change(async (e)=> {
    let imgtoDb = res.data.secure_url
    // return imgtoDb
    postObj.imgUrlPostTiltle = imgtoDb
-   console.log(imgtoDb)
+   imgPrev.src = res.data.secure_url
+ // console.log(imgtoDb)
 })
 let imagePost = []
 // Imagen secundaria
@@ -127,8 +129,7 @@ $('#inputGroupFile02').change(async (e)=> {
    const res = await axios.post(CLOUDINARY, formData, {
     headers: { 'Content-Type': 'multipart/form-data' } //informacion que ingresa a cloudinary
     })
-
-   // console.log(res)
+    // console.log(res)
    let imgtoDb = res.data.secure_url
    imagePost = [...imagePost, imgtoDb]
    // return imgtoDb
@@ -151,15 +152,14 @@ btnSubmit.click( e =>{
    let today = new Date();
    let dd = today.getDate();
    let mm = today.getMonth() + 1; //January is 0!
-   let yyyy = today.getFullYear();
-   
+   let yyyy = today.getFullYear();   
    if (dd < 10) {
      dd = '0' + dd;
    }
    if (mm < 10) {
         mm = '0' + mm;
       } 
-   today = mm + '/' + dd + '/' + yyyy;
+   today = dd + '/' + mm + '/' + yyyy;
 //document.write(today);
 //   let fecha =moment().format('DD/MM/YYYY' )   
    let fecha =today
@@ -188,7 +188,6 @@ btnSubmit.click( e =>{
          || txtPost === undefined || txtPost === '' 
       ) {
          mostrarMensaje()
-      //   alert('campos obligatorios')
          return
       }
       updatingPost(postObj)
@@ -233,7 +232,6 @@ function updatingPost(post) {
 
 function preparingUpdatingPost(id,todoUnPost){
    //console.log(todoUnPost)
-
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags, usuario} = todoUnPost
    //console.log(id);
    //aca relleno los inputs con los valores del objetoque quiero editar
@@ -246,7 +244,6 @@ function preparingUpdatingPost(id,todoUnPost){
    $('#textareaTitle').val(titlePost)*/
 //   $('#textarea-post').val(txtPost)
    tags.forEach((x,i) =>  $('#inputTags').val(`${x}, `))
-
    postObj.id = id
    postObj.imgUrlPostContent = imgUrlPostContent
    postObj.imgUrlPostTiltle  = imgUrlPostTiltle
@@ -265,8 +262,6 @@ function getUser(){
       url: 'https://randomuser.me/api/',
       dataType: 'json',
       success: function (data) {
-      //pictureProfileUser = data.results[0].picture.thumbnail;
-     //nameUser = data.results[0].login.username
         userPost.pictureProfileUser = data.results[0].picture.thumbnail;
         userPost.nameUser = data.results[0].login.username
       },
@@ -319,31 +314,6 @@ function mostrarMensaje() {
          }, 2000);
    }
 }
-//NUEVA REVISAR
-/*function mostrarPostEnHtml(arregloKoders){
-   console.log('*************');
-   console.log('FUNCION DE PINTAR');
-   console.log(arregloKoders);
-   console.log('*************');
-   let aside = $('#aside-right')
-    aside.text('')
-   arregloKoders.forEach( post =>{
-      const { id, titlePost} = post
-      let pNombre = document.createElement('p')
-      pNombre.textContent = id
-      let btnEliminar = document.createElement('button')
-      btnEliminar.textContent = 'delete'
-      btnEliminar.classList.add('btn', 'btn-danger')
-      btnEliminar.onclick = () => deletePost(id)
-      let btnEditar = document.createElement('button')
-      btnEditar.textContent = 'edite'
-      btnEditar.classList.add('btn', 'btn-warning')
-      btnEditar.onclick = () => preparingUpdatingPost(post)
-      aside.append(btnEliminar)
-      aside.append(btnEditar)
-      aside.append(pNombre)
-   })
-}
-*/
+
 
 

@@ -2,7 +2,6 @@
 let postArray=[]
 const getPost = () => {
     postArray=[]
-    let fecha =moment().format('DD/MM/YYYY' ) 
     //fecha = new Date() ;
     //console.log(fecha)
     let postsObject={}
@@ -50,16 +49,17 @@ const clickToEditPost=(e)=>{
     window.location.href = `newsPost.html?idpost=${idPost}`
 }
 //
+/*
 const time =(fechaAnterior)=>{
     let actual=moment().format('DD/MM/YYYY HH:mm:ss');
     var day1 = new Date(fechaAnterior);
     var day2 = new Date(actual);
     //let anterior=moment().format(fechaAnterior);
     let duration =day2.getTime() -day1.getTime()
-
     return duration
 }
 console.log(time("10/10/2021 00:20:44"))
+*/
 //console.log(getPost())
 const createNode = (typeElement, text,arrayClass) => {
     let node = document.createElement(typeElement)
@@ -170,18 +170,8 @@ const drawPost =(arrayPost) =>{
          divWheart.appendChild(divSvg)
        let iHeart=createNode("i",null,["bi","bi-suit-heart"])
        divSvg.appendChild(iHeart)
-
-/*     //no funciono svg se cambiaron por icon
-
-
-    /*   iDelete.setAttribute("data-post-id-delete", id)
-      buttonDelete.appendChild(iDelete)      
-      buttonDelete.setAttribute("data-post-id-delete", id)
-      buttonDelete.addEventListener("click", clickToDeletePost)
-      divWbtnSave.appendChild(buttonDelete)      */
-
-/*     //no funciono svg se cambiaron por icon  
-
+     //no funciono svg se cambiaron por icon
+     /*     //no funciono svg se cambiaron por icon  
        //<i class="bi bi-suit-heart"></i>
        let svg=createNode("svg",null,[])
          svg.setAttribute('width',"24")
@@ -224,6 +214,7 @@ const drawPost =(arrayPost) =>{
       divWInfo.appendChild(divTime)
 
       let divWbtnSave=createNode("div","",["save","pl-1"])
+    
       divWInfo.appendChild(divWbtnSave)
 
       let divbtnSave=createNode("button","Save",["btn-save"])
@@ -251,68 +242,93 @@ const drawPost =(arrayPost) =>{
 }
 drawPost(getPost())
 
-$("#heart-Count").click( ()=> {
-    //$( "#target" ).click();
-    alert("count")
-  })
-
-
- $("#fechas").change(()=> {
-    let select = $("#fechas option:selected").val()
-    console.log(select)    
-})
-
-//document.querySelector('#month').addEventListener('click', (e) => {
- $('#month').click((e) => {
-    e.preventDefault()
-    postArray = postArray.map( post =>{
-        return { ...post, fechaConvertida: post.fecha.split('/')}
-    })
-   postArray = postArray.filter( post => Number(post.fechaConvertida[1]) === new Date().getMonth() + 1 )
-   console.log( postArray);
-   drawPost(postArray)
-})
-
-document.querySelector('#week').addEventListener('click', (e) => {
-    e.preventDefault()
+//$("#heart-Count").click( ()=> {    //$( "#target" ).click();    alert("count")  })
+const filterWeek= (arrayPost)=>{    
     let fecha = new Date() //Genera la fecha del dia de hoy
     let mes = (fecha.getMonth() + 1)
     let hoy = fecha.getDate()
-    let finde = (hoy - 7)
-    
-    postArray = postArray.map( post =>{
+    let finde = (hoy - 7)    
+    arrayPost = arrayPost.map( post =>{
         return { ...post, fechaConvertida: post.fecha.split('/')}
     })
-
-    postArray = postArray.filter( post => {
+    arrayPost = arrayPost.filter( post => {
         // if(Number (post.fechaConvertida[1]) === mes) {
         return Number (post.fechaConvertida[1]) === mes 
         && Number (post.fechaConvertida[0]) >= finde 
         && Number (post.fechaConvertida[0]) <= hoy   
     })
-    console.log( postArray)
-    drawPost(postArray)
+    //console.log( postArray)
+    drawPost(arrayPost) 
+}
+
+const filterMonth= (arrayPost)=>{    
+      arrayPost = arrayPost.map( post =>{
+        return { ...post, fechaConvertida: post.fecha.split('/')}
+    })
+     arrayPost = arrayPost.filter( post => Number(post.fechaConvertida[1]) === new Date().getMonth() + 1 )
+   drawPost(arrayPost)   
+}
+
+const filterYear= (arrayPost)=>{    
+        arrayPost = arrayPost.map( post =>{
+        return { ...post, fechaConvertida: post.fecha.split('/')}
+     })
+     arrayPost = arrayPost.filter(post => Number(post.fechaConvertida[2]) === new Date().getFullYear())
+     //console.log(postArray);
+     drawPost(arrayPost)
+}
+
+$("#fechas").change(()=> {
+    let select = $("#fechas option:selected").val()
+    console.log(select)    
+    switch (select){        
+        case "week":
+            filterWeek(getPost()) 
+        break;
+        case "month":
+            filterMonth(getPost())
+        break;
+        case "year":
+            filterYear(getPost())
+        break;
+
+        case "infinity":
+            drawPost(getPost())
+        break;
+
+        
+
+        default:
+           console.log("funcion aun no programada")
+         break;
+    }
+})
+
+document.querySelector('#week').addEventListener('click', (e) => {
+    e.preventDefault()
+    filterWeek(getPost())  
+})
+
+$('#month').click((e) => {
+    e.preventDefault()
+    filterMonth(getPost())
+})
+
+$('#infinity').click((e) => {
+    e.preventDefault()
+    drawPost(getPost())
 })
 
 document.querySelector('#year').addEventListener('click', (e) => {
     e.preventDefault()
-
-    postArray = postArray.map( post =>{
-       return { ...post, fechaConvertida: post.fecha.split('/')}
-    })
-    postArray = postArray.filter(post => Number(post.fechaConvertida[2]) === new Date().getFullYear())
-    console.log(postArray);
-    drawPost(postArray)
-
+    filterYear(getPost())
 })
+
 inputSearch =document.getElementById("search")
 inputSearch.addEventListener("keyup", (e)=> {
     let valorInput = inputSearch.value.toUpperCase()
-    
-    // titlePost
     let resultadoBusqueda = postArray.filter(post => {
         return post.titlePost.toUpperCase().includes(valorInput)    
     })
     drawPost(resultadoBusqueda)
-    // console.log(resultadoBusqueda)
 })

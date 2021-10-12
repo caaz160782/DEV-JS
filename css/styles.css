@@ -270,7 +270,7 @@ main nav .form-control:focus {
   padding: 4px 12px;
   background-color: #D2D6DB;
   color: #363D44;
-  font-size: 14px;
+  font-size: 11px;
   border-radius: 5px;
   border: none;
   margin-right: 10px;
@@ -357,6 +357,9 @@ main nav .form-control:focus {
   }
   .comments:hover {
     background-color: #eef0f1;
+  }
+  .save .btn-save {
+    font-size: 12px;
   }
   .save .btn-save:hover {
     background-color: #b5bdc4;
