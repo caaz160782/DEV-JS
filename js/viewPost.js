@@ -254,16 +254,18 @@ $("#heart-Count").click( ()=> {
   })
 
 
- $("#week").click(()=> {
+//  $("#week").click(()=> {
     
-    console.log(1)
+//     console.log(1)
+
     
- })
+//  })
+
  $("#fechas").change(()=> {
     let select = $("#fechas option:selected").val()
     console.log(select)
     
- })
+})
 
 document.querySelector('#month').addEventListener('click', (e) => {
     e.preventDefault()
@@ -275,8 +277,30 @@ document.querySelector('#month').addEventListener('click', (e) => {
    drawPost(postArray)
 })
 
+document.querySelector('#week').addEventListener('click', (e) => {
+    e.preventDefault()
+    let fecha = new Date() //Genera la fecha del dia de hoy
+    let mes = (fecha.getMonth() + 1)
+    let hoy = fecha.getDate()
+    let finde = (hoy - 7)
+    
+    postArray = postArray.map( post =>{
+        return { ...post, fechaConvertida: post.fecha.split('/')}
+    })
+
+    postArray = postArray.filter( post => {
+        // if(Number (post.fechaConvertida[1]) === mes) {
+        return Number (post.fechaConvertida[1]) === mes 
+        && Number (post.fechaConvertida[0]) >= finde 
+        && Number (post.fechaConvertida[0]) <= hoy   
+    })
+    console.log( postArray)
+    drawPost(postArray)
+})
+
 document.querySelector('#year').addEventListener('click', (e) => {
     e.preventDefault()
+
     postArray = postArray.map( post =>{
        return { ...post, fechaConvertida: post.fecha.split('/')}
     })
@@ -284,4 +308,17 @@ document.querySelector('#year').addEventListener('click', (e) => {
     console.log(postArray);
     drawPost(postArray)
 
+})
+// Funcion para search bar
+document.querySelector('#search').addEventListener('keyup', (e) => {
+    e.preventDefault()
+    let valueInput = document.querySelector('#search').value.toLowerCase()  
+    // console.log(valueInput)
+    let buscaPalabra = postArray.filter( post => {
+           return post.titlePost.toLowerCase().includes(valueInput)
+        })
+    console.log(buscaPalabra)
+    drawPost(buscaPalabra)
+        //  =>{ post.titlePost === valueInput})
+    // console.log(buscaPalabra)
 })

@@ -154,8 +154,7 @@ btnSubmit.click( e =>{
    if (
       titlePost === undefined || titlePost === '' || tags.length === 0
       || txtPost === undefined || txtPost === '' 
-      || imgUrlPostTiltle === undefined || imgUrlPostContent === undefined
-   ) {
+      ) {
      // alert('campos obligatorios')
       mostrarMensaje()
       return txtPost
@@ -173,7 +172,6 @@ btnSubmit.click( e =>{
       if (
          titlePost === undefined || titlePost === '' || tags.length === 0
          || txtPost === undefined || txtPost === '' 
-         || imgUrlPostTiltle === undefined  ||  imgUrlPostContent=== undefined
       ) {
          mostrarMensaje()
       //   alert('campos obligatorios')
