@@ -2,10 +2,13 @@
 let postArray=[]
 const getPost = () => {
     postArray=[]
+    let fecha =moment().format('DD/MM/YYYY' ) 
+    //fecha = new Date() ;
+    //console.log(fecha)
     let postsObject={}
     $.ajax({
         method: "GET",
-        url: "https://devpost-72887-default-rtdb.firebaseio.com/posts.json",
+        url: `https://devpost-72887-default-rtdb.firebaseio.com/posts.json`,        
         success: response => {
             postsObject = response
 
@@ -265,7 +268,8 @@ $("#heart-Count").click( ()=> {
     
  })
 
-document.querySelector('#month').addEventListener('click', (e) => {
+//document.querySelector('#month').addEventListener('click', (e) => {
+   $('#month').click((e) => {
     e.preventDefault()
     postArray = postArray.map( post =>{
         return { ...post, fechaConvertida: post.fecha.split('/')}
@@ -275,7 +279,7 @@ document.querySelector('#month').addEventListener('click', (e) => {
    drawPost(postArray)
 })
 
-document.querySelector('#year').addEventListener('click', (e) => {
+ $('#year').click( (e) => {
     e.preventDefault()
     postArray = postArray.map( post =>{
        return { ...post, fechaConvertida: post.fecha.split('/')}

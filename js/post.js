@@ -148,7 +148,21 @@ function obtenerDatos(e) {
 
 btnSubmit.click( e =>{
    e.preventDefault()
-   let fecha =moment().format('DD/MM/YYYY' )   
+   let today = new Date();
+   let dd = today.getDate();
+   let mm = today.getMonth() + 1; //January is 0!
+   let yyyy = today.getFullYear();
+   
+   if (dd < 10) {
+     dd = '0' + dd;
+   }
+   if (mm < 10) {
+        mm = '0' + mm;
+      } 
+   today = mm + '/' + dd + '/' + yyyy;
+//document.write(today);
+//   let fecha =moment().format('DD/MM/YYYY' )   
+   let fecha =today
    //let txtPost = simplemde.value()
    const { titlePost, txtPost, imgUrlPostContent, imgUrlPostTiltle, tags } = postObj
    if (
