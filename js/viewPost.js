@@ -300,6 +300,7 @@ document.querySelector('#week').addEventListener('click', (e) => {
 
 document.querySelector('#year').addEventListener('click', (e) => {
     e.preventDefault()
+
     postArray = postArray.map( post =>{
        return { ...post, fechaConvertida: post.fecha.split('/')}
     })
