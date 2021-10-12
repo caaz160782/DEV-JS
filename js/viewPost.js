@@ -305,16 +305,14 @@ document.querySelector('#year').addEventListener('click', (e) => {
     drawPost(postArray)
 
 })
-// Funcion para search bar
-document.querySelector('#search').addEventListener('keyup', (e) => {
-    e.preventDefault()
-    let valueInput = document.querySelector('#search').value.toLowerCase()  
-    // console.log(valueInput)
-    let buscaPalabra = postArray.filter( post => {
-           return post.titlePost.toLowerCase().includes(valueInput)
-        })
-    console.log(buscaPalabra)
-    drawPost(buscaPalabra)
-        //  =>{ post.titlePost === valueInput})
-    // console.log(buscaPalabra)
+inputSearch =document.getElementById("search")
+inputSearch.addEventListener("keyup", (e)=> {
+    let valorInput = inputSearch.value.toUpperCase()
+    
+    // titlePost
+    let resultadoBusqueda = postArray.filter(post => {
+        return post.titlePost.toUpperCase().includes(valorInput)    
+    })
+    drawPost(resultadoBusqueda)
+    // console.log(resultadoBusqueda)
 })
